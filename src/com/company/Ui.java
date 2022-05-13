@@ -1,13 +1,16 @@
 package com.company;
 
+import com.sun.jdi.ClassNotLoadedException;
+
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 public class Ui {
   private MedlemmerBase medlemmerBase = new MedlemmerBase();
 
-  public void start() throws FileNotFoundException {
+  public void medlemsSystem() throws FileNotFoundException, InterruptedException {
     //TODO: tilføj funktioner, til prorgammet, så det ikke crasher når man skriver en String istedet for int f.eks.
+    clearScreen();
     System.out.println("Velkommen til Medlemmer håndteringsprogrammet");
     System.out.println("====================================");
     System.out.println("Beta version");
@@ -15,7 +18,10 @@ public class Ui {
     while (true) {
       System.out.println();
       switch (mainMenu()) {
-        case 0 -> System.out.println();//exit();
+        case 0 -> {
+          System.out.println(Color.RED+"HAR DU HUSKET AT GEMME DINE NYE REGISTRERINGER?"+Color.RESET);
+          exit();
+        }
         case 1 -> list();
         case 2 -> medlemsRegistrering();
         case 3 -> delete();
@@ -23,6 +29,9 @@ public class Ui {
         case 5 -> save();
       }
     }
+  }
+  public void exit() throws FileNotFoundException, InterruptedException {
+    menu();
   }
 
   public int mainMenu() {
@@ -71,47 +80,143 @@ medlemmerBase.opretNyMedlem(navn,alder,eMail,telefonNr);
   public void list(){
       System.out.println("Liste over alle medlemmere");
       System.out.println("-----------------------");
-      for (Medlem medlem : medlemmerBase.getAllAnimals()) {
+      for (Medlem medlem : medlemmerBase.getAllMedlemmere()) {
         System.out.println(Color.YELLOW + medlem+ Color.RESET);
       }
       System.out.println("Der er " + medlemmerBase.getMedlemCount() + " medlemmere i klubben.");
   }
-  public void velkommenBesked(){
+  public void velkommenBesked() throws InterruptedException {
     System.out.println("DELFINENS ADMINISTRATIVE SYSTEM");
-    for (int i = 0; i < 5; i++) {
-      System.out.println(".");
-    }
+loadingSkærm();
+  }
+  public void start() throws InterruptedException, FileNotFoundException {
+    velkommenBesked();
+    menu();
   }
 
-  public void menu(){
+  public void menu() throws FileNotFoundException, InterruptedException {
+    clearScreen();
+    System.out.println("==========================================");
     System.out.println("Vælg mellem følgende valgmuligheder\n");
     System.out.println("1.  Registrer nyt medlem");
     System.out.println("2.  Tilgå kontingent betalinger");
-    System.out.println("3.  Se konkurrencesvømmer informationer");
+    System.out.println("3.  Exit");
+
+    Scanner input = new Scanner(System.in);
+    int choice = input.nextInt();
+    while (choice < 0 || choice > 3) {
+      System.out.println("Only values 0-3 allowed");
+      choice = input.nextInt();
+    }
+    while (true) {
+      switch (choice) {
+        case 1 -> medlemsSystem();
+        case 2 -> kassere();
+        case 3 -> {
+          clearScreen();
+          clearScreen();
+          System.out.println(Color.RED+"APPLICATION AFSLUTTET"+Color.RESET);
+          System.exit(0);
+        }
+      }
+    }
   }
-  private void save() throws FileNotFoundException {
+  public void save() throws FileNotFoundException {
     System.out.println(Color.GREEN+"Saving the database ...");
     medlemmerBase.saveDatabase();
     System.out.println("Saving database completed succesfully");
     System.out.println("You can now exit the application"+Color.RESET);
   }
-  private void load() throws FileNotFoundException {
+  public void load() throws FileNotFoundException {
     System.out.println(Color.GREEN+"Loading the database ...");
     medlemmerBase.loadDatabase();
     System.out.println("Done!"+Color.RESET);
   }
-  private void delete() {
+  public void delete() {
     System.out.println("Slet medlem");
     System.out.println("-------------");
     System.out.println("Venligst skriv fornavnet, på det medlem der skal slettes: ");
+
     Scanner input = new Scanner(System.in);
     String name = input.nextLine();
+    String text = name;
 
-    boolean success = medlemmerBase.sletMedlem(name);
-    if (success) {
-      System.out.println("Medlemmet med navnet '" + name + "' er blevet afksrivet fra klubben");
+    String firstWord = "";
+    String secondWord = "";
+    int index = text.indexOf(' ');
+
+    if (index > -1) { // Check if there is more than one word.
+
+      firstWord = text.substring(0, index).trim(); // Extract first word.
+      secondWord = text.substring(index + 1, text.length());
+
     } else {
-      System.out.println("Medlemmet '" + name + "' findes ikke, og kan derfor ikke blive afskrivet fra klubben");
+      firstWord = text; // Text is the first word itself.
     }
+    System.out.println(firstWord);
+    boolean success = medlemmerBase.sletMedlem(firstWord);
+    if (success) {
+      System.out.println(Color.GREEN+"Medlemmet med navnet '" +Color.RESET+ name +Color.GREEN+ "' er blevet afksrivet fra klubben"+Color.RESET);
+    } else {
+      System.out.println(Color.RED+"Medlemmet '" +Color.RESET+ name +Color.RED+ "' findes ikke, og kan derfor ikke blive afskrivet fra klubben"+Color.RESET);
+    }
+  }
+  public void kassere() throws FileNotFoundException, InterruptedException {
+    System.out.println();
+    System.out.println("========================================");
+    System.out.println("Vælg mellem følgende valgmuligheder\n");
+    System.out.println("1.  Oversigt over medlemmer kontingent");
+    System.out.println("2.  Oversigt over samlede betalinger");
+    System.out.println("3.  Exit");
+
+    Scanner input = new Scanner(System.in);
+    int choice = input.nextInt();
+    while (choice < 1 || choice > 3) {
+      System.out.println("Du kan kun vælge mellem 1-3");
+      choice = input.nextInt();
+    }
+
+    switch (choice){
+      case 1 -> kontingentOversigt();
+      case 2 -> samletBetalingsOversigt();
+      case 3 -> menu();
+    }
+  }
+  public void loadingSkærm() throws InterruptedException {
+    for (int i = 0; i < 3; i++) {
+      System.out.println(".");
+      Thread.sleep(300);
+      System.out.println(".");
+      Thread.sleep(300);
+      System.out.println(".");
+      Thread.sleep(500);
+      System.out.print("LOADING");
+      for (int j = 0; j < 3; j++) {
+        Thread.sleep(300);
+        System.out.print(".");
+      }
+    }
+    System.out.println();
+    System.out.println(".");
+    Thread.sleep(300);
+    System.out.println(".");
+    Thread.sleep(300);
+    System.out.println(Color.GREEN_BOLD+"Programmet Kører"+Color.RESET);
+    Thread.sleep(800);
+
+clearScreen();
+  }
+  public void kontingentOversigt() throws FileNotFoundException {
+    clearScreen();
+    medlemmerBase.hentKontingentOversigt();
+  }
+  public void samletBetalingsOversigt() throws FileNotFoundException {
+    clearScreen();
+    System.out.println(Color.YELLOW_BOLD+medlemmerBase.hentSamletBetaling()+" kr." + Color.RESET);
+    System.out.println();
+  }
+  public void clearScreen(){
+    System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n");
+
   }
 }

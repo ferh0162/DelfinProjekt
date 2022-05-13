@@ -15,7 +15,7 @@ public class MedlemmerBase {
     medlemmere.add(medlem);
   }
 
-  public Iterable<Medlem> getAllAnimals() {
+  public Iterable<Medlem> getAllMedlemmere() {
     return medlemmere;
   }
 
@@ -32,20 +32,63 @@ public class MedlemmerBase {
     FileHandler fileHandler = new FileHandler();
     medlemmere = fileHandler.loadMedlemmereFraFil();
   }
+
+  public void hentKontingentOversigt() throws FileNotFoundException {
+    loadDatabase();
+    for (int i = 0; i < medlemmere.size(); i++) {
+      if (!medlemmere.get(i).medlemskabsStatus.equals(MedlemskabsStatus.AKTIV)) {
+        System.out.println(Color.PURPLE_BOLD + medlemmere.get(i).getFornavn() + Color.RESET + " Betaler: " + "500 kr.");
+      } else if (medlemmere.get(i).getAlder() < 18) {
+        System.out.println(Color.PURPLE_BOLD + medlemmere.get(i).getFornavn() + Color.RESET + " Betaler: " + "1000 kr.");
+
+      } else if (18 < medlemmere.get(i).getAlder() && medlemmere.get(i).getAlder() < 60) {
+        System.out.println(Color.PURPLE_BOLD + medlemmere.get(i).getFornavn() + Color.RESET + " Betaler: " + "1600 kr.");
+
+      } else if (60 < medlemmere.get(i).getAlder()) {
+        System.out.println(Color.PURPLE_BOLD + medlemmere.get(i).getFornavn() + Color.RESET + " Betaler: " + "1200 kr.");
+      }
+    }
+    System.out.println(medlemmere);
+  }
+  public int hentSamletBetaling() throws FileNotFoundException {
+    loadDatabase();
+    int samletBetaling = 0;
+    for (int i = 0; i < medlemmere.size(); i++) {
+      if (!medlemmere.get(i).medlemskabsStatus.equals(MedlemskabsStatus.AKTIV)) {
+        System.out.println(Color.PURPLE_BOLD + medlemmere.get(i).getFornavn() + Color.RESET + " Betaler: " + "500 kr.");
+        samletBetaling+=500;
+      } else if (medlemmere.get(i).getAlder() < 18) {
+        System.out.println(Color.PURPLE_BOLD + medlemmere.get(i).getFornavn() + Color.RESET + " Betaler: " + "1000 kr.");
+        samletBetaling+=1000;
+
+      } else if (18 < medlemmere.get(i).getAlder() && medlemmere.get(i).getAlder() < 60) {
+        System.out.println(Color.PURPLE_BOLD + medlemmere.get(i).getFornavn() + Color.RESET + " Betaler: " + "1600 kr.");
+        samletBetaling+=1600;
+
+      } else if (60 < medlemmere.get(i).getAlder()) {
+        System.out.println(Color.PURPLE_BOLD + medlemmere.get(i).getFornavn() + Color.RESET + " Betaler: " + "1200 kr.");
+        samletBetaling+=1200;
+      }
+    }
+    System.out.println();
+    System.out.print("Samlede Betaling for alle medlemmere: ");
+    return samletBetaling;
+  }
   public boolean sletMedlem(String navn) {
     // find animal with this name
     Medlem medlem = findMedlemByName(navn);
-    if(medlem == null) {
+    if (medlem == null) {
       return false;
     } else {
       medlemmere.remove(medlem);
       return true;
     }
   }
+
   private Medlem findMedlemByName(String navn) {
     //TODO: loop kun igennem fornavnet
-    for(Medlem medlem : medlemmere) {
-      if(medlem.getNavn().equalsIgnoreCase(navn)) {
+    for (Medlem medlem : medlemmere) {
+      if (medlem.getFornavn().equalsIgnoreCase(navn)) {
         return medlem;
       }
     }

@@ -18,13 +18,32 @@ public class Medlem {
     this.alder = alder;
     this.eMail = eMail;
     this.telefonNr = telefonNr;
-    medlemskabsStatus = MedlemskabsStatus.AKTIV;
     isInRestance = false;
+    medlemskabsStatus = MedlemskabsStatus.AKTIV;
   }
-
 
   public String getNavn() {
     return navn;
+  }
+
+  public String getFornavn() {
+    navn = navn.toLowerCase();
+
+    String text = navn;
+
+    String firstWord = "";
+    String secondWord = "";
+    int index = text.indexOf(' ');
+
+    if (index > -1) { // Check if there is more than one word.
+
+      firstWord = text.substring(0, index).trim(); // Extract first word.
+      secondWord = text.substring(index + 1, text.length());
+
+    } else {
+      firstWord = text; // Text is the first word itself.
+    }
+    return firstWord;
   }
 
   public void setNavn(String navn) {

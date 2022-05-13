@@ -47,6 +47,7 @@ public class FileHandler {
     int telefonNr = input.nextInt();
 
     Medlem medlem = new Medlem(navn, alder, eMail, telefonNr);
+
     return medlem;
   }
 }
