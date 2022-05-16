@@ -87,4 +87,5 @@ public Medlem (String navn, int alder, String eMail, int telefonNr, Køn køn, S
   public void setSvømmedisciplin(Svømmedisciplin svømmedisciplin) {
     this.svømmedisciplin = svømmedisciplin;
   }
+
 }
