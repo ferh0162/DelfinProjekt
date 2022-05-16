@@ -90,6 +90,14 @@ public class Medlem {
     this.medlemskabsStatus = medlemskabsStatus;
   }
 
+  public boolean isInRestance() {
+    return isInRestance;
+  }
+
+  public void setInRestance(boolean inRestance) {
+    isInRestance = inRestance;
+  }
+
   @Override
   public String toString() {
     return "Navn: "+navn +" "

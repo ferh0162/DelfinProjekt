@@ -54,25 +54,33 @@ public class MedlemmerBase {
     loadDatabase();
     int samletBetaling = 0;
     for (int i = 0; i < medlemmere.size(); i++) {
-      if (!medlemmere.get(i).medlemskabsStatus.equals(MedlemskabsStatus.AKTIV)) {
-        System.out.println(Color.PURPLE_BOLD + medlemmere.get(i).getFornavn() + Color.RESET + " Betaler: " + "500 kr.");
+      Medlem medlemI = medlemmere.get(i);
+
+      if (medlemI.isInRestance() == true){
+        System.out.println(Color.PURPLE_BOLD + medlemI.getFornavn() + Color.RESET + "Mangler betaling");
+      }
+      else if(!medlemI.medlemskabsStatus.equals(MedlemskabsStatus.AKTIV)) {
+        System.out.println(Color.PURPLE_BOLD + medlemI.getFornavn() + Color.RESET + " Betaler: " + "500 kr.");
         samletBetaling+=500;
-      } else if (medlemmere.get(i).getAlder() < 18) {
-        System.out.println(Color.PURPLE_BOLD + medlemmere.get(i).getFornavn() + Color.RESET + " Betaler: " + "1000 kr.");
+      } else if (medlemI.getAlder() < 18) {
+        System.out.println(Color.PURPLE_BOLD + medlemI.getFornavn() + Color.RESET + " Betaler: " + "1000 kr.");
         samletBetaling+=1000;
 
-      } else if (18 < medlemmere.get(i).getAlder() && medlemmere.get(i).getAlder() < 60) {
-        System.out.println(Color.PURPLE_BOLD + medlemmere.get(i).getFornavn() + Color.RESET + " Betaler: " + "1600 kr.");
+      } else if (18 < medlemI.getAlder() && medlemI.getAlder() < 60) {
+        System.out.println(Color.PURPLE_BOLD + medlemI.getFornavn() + Color.RESET + " Betaler: " + "1600 kr.");
         samletBetaling+=1600;
 
-      } else if (60 < medlemmere.get(i).getAlder()) {
-        System.out.println(Color.PURPLE_BOLD + medlemmere.get(i).getFornavn() + Color.RESET + " Betaler: " + "1200 kr.");
+      } else if (60 < medlemI.getAlder()) {
+        System.out.println(Color.PURPLE_BOLD + medlemI.getFornavn() + Color.RESET + " Betaler: " + "1200 kr.");
         samletBetaling+=1200;
       }
     }
     System.out.println();
     System.out.print("Samlede Betaling for alle medlemmere: ");
     return samletBetaling;
+  }
+  public void hentIRestance(){
+
   }
   public boolean sletMedlem(String navn) {
     // find animal with this name
@@ -86,7 +94,6 @@ public class MedlemmerBase {
   }
 
   private Medlem findMedlemByName(String navn) {
-    //TODO: loop kun igennem fornavnet
     for (Medlem medlem : medlemmere) {
       if (medlem.getFornavn().equalsIgnoreCase(navn)) {
         return medlem;
