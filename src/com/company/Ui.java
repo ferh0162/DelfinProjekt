@@ -179,7 +179,9 @@ loadingSkærm();
     switch (choice){
       case 1 -> kontingentOversigt();
       case 2 -> samletBetalingsOversigt();
-      case 3 -> menu();
+      case 3 -> hentRestance();
+      case 4 -> setIRestance();
+      case 0 -> menu();
     }
   }
   public void loadingSkærm() throws InterruptedException {
@@ -214,6 +216,9 @@ clearScreen();
     clearScreen();
     System.out.println(Color.YELLOW_BOLD+medlemmerBase.hentSamletBetaling()+" kr." + Color.RESET);
     System.out.println();
+  }
+  public void hentRestance(){
+    medlemmerBase.hentIRestance();
   }
   public void clearScreen(){
     System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n");

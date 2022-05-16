@@ -80,7 +80,12 @@ public class MedlemmerBase {
     return samletBetaling;
   }
   public void hentIRestance(){
-
+    for (int i = 0; i < medlemmere.size(); i++) {
+      Medlem medlemI = medlemmere.get(i);
+if (medlemI.isInRestance()){
+  System.out.println(medlemI.getFornavn()+" er i restance");
+}
+    }
   }
   public boolean sletMedlem(String navn) {
     // find animal with this name
