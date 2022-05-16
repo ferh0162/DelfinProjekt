@@ -5,9 +5,11 @@ import java.util.ArrayList;
 
 public class MedlemmerBase {
   private ArrayList<Medlem> medlemmere;
+  private ArrayList<Medlem> restanceListe;
 
   public MedlemmerBase() {
     medlemmere = new ArrayList<>();
+    restanceListe = new ArrayList<>();
   }
 
   public void opretNyMedlem(String navn, int alder, String eMail, int telefonNr) {
@@ -82,10 +84,12 @@ public class MedlemmerBase {
   public void hentIRestance(){
     for (int i = 0; i < medlemmere.size(); i++) {
       Medlem medlemI = medlemmere.get(i);
+      /*
 if (medlemI.isInRestance()){
   System.out.println(medlemI.getFornavn()+" er i restance");
-}
+}*/
     }
+    System.out.println(restanceListe);
   }
   public boolean sletMedlem(String navn) {
     // find animal with this name
@@ -97,6 +101,17 @@ if (medlemI.isInRestance()){
       return true;
     }
   }
+  public boolean setMedlemIRestance(String navn) {
+    // find medlem with this name
+    Medlem medlem = findMedlemByName(navn);
+    if (medlem == null) {
+      return false;
+    } else {
+      restanceListe.add(medlem);
+      medlem.setInRestance(true);
+      return true;
+    }
+  }
 
   private Medlem findMedlemByName(String navn) {
     for (Medlem medlem : medlemmere) {
@@ -105,5 +120,13 @@ if (medlemI.isInRestance()){
       }
     }
     return null;
+  }
+
+  @Override
+  public String toString() {
+    return "MedlemmerBase{" +
+        "medlemmere=" + medlemmere +
+        ", restanceListe=" + restanceListe +
+        '}';
   }
 }

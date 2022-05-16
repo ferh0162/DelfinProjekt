@@ -167,12 +167,14 @@ loadingSkærm();
     System.out.println("Vælg mellem følgende valgmuligheder\n");
     System.out.println("1.  Oversigt over medlemmer kontingent");
     System.out.println("2.  Oversigt over samlede betalinger");
-    System.out.println("3.  Exit");
+    System.out.println("3.  Oversigt over restance liste");
+    System.out.println("4.  Sæt medlem i Restance");
+    System.out.println("");
 
     Scanner input = new Scanner(System.in);
     int choice = input.nextInt();
-    while (choice < 1 || choice > 3) {
-      System.out.println("Du kan kun vælge mellem 1-3");
+    while (choice < 1 || choice > 5) {
+      System.out.println("Du kan kun vælge mellem 1-5");
       choice = input.nextInt();
     }
 
@@ -222,6 +224,36 @@ clearScreen();
   }
   public void clearScreen(){
     System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n");
+
+  }
+  public void setIRestance(){
+    System.out.println("Sæt medlem i restance");
+    System.out.println("-------------");
+    System.out.println("Venligst skriv fornavnet, på det medlem der skal sættes i restance: ");
+
+    Scanner input = new Scanner(System.in);
+    String name = input.nextLine();
+    String text = name;
+
+    String firstWord = "";
+    String secondWord = "";
+    int index = text.indexOf(' ');
+
+    if (index > -1) { // Check if there is more than one word.
+
+      firstWord = text.substring(0, index).trim(); // Extract first word.
+      secondWord = text.substring(index + 1, text.length());
+
+    } else {
+      firstWord = text; // Text is the first word itself.
+    }
+    System.out.println(firstWord);
+    boolean success = medlemmerBase.setMedlemIRestance(firstWord);
+    if (success) {
+      System.out.println(Color.GREEN+"Medlemmet med navnet '" +Color.RESET+ name +Color.GREEN+ "' er blevet sat i restance"+Color.RESET);
+    } else {
+      System.out.println(Color.RED+"Medlemmet '" +Color.RESET+ name +Color.RED+ "' findes ikke, og kan derfor ikke blive sat i restance"+Color.RESET);
+    }
 
   }
 }
