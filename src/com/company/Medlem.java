@@ -1,31 +1,49 @@
 package com.company;
 
+//TODO: lave konkurrence svømmer til en arveklasse, da den skal have flere attributter som svømmedisciplin
 public class Medlem {
 
-private String navn;
-private int alder;
-private String eMail;
-private int telefonNr;
-private Køn køn;
-private SvømmerHold svømmerHold;
-private MedlemskabsStatus medlemskabsStatus;
-private Svømmedisciplin svømmedisciplin;
+  protected String navn;
+  protected int alder;
+  protected String eMail;
+  protected int telefonNr;
+  protected Køn køn;
+  protected boolean isInRestance;
+  protected MedlemskabsStatus medlemskabsStatus;
 
-public Medlem (String navn, int alder, String eMail, int telefonNr, Køn køn, SvømmerHold svømmerHold, MedlemskabsStatus medlemskabsStatus, Svømmedisciplin svømmedisciplin){
 
-  this.navn = navn;
-      this.alder = alder;
-          this.eMail = eMail;
-              this.telefonNr = telefonNr;
-              this.køn = køn;
-              this.svømmerHold = svømmerHold;
-              this.medlemskabsStatus = medlemskabsStatus;
-              this. svømmedisciplin = svømmedisciplin;
+  public Medlem(String navn, int alder, String eMail, int telefonNr) {
 
-}
+    this.navn = navn;
+    this.alder = alder;
+    this.eMail = eMail;
+    this.telefonNr = telefonNr;
+    isInRestance = false;
+    medlemskabsStatus = MedlemskabsStatus.AKTIV;
+  }
 
   public String getNavn() {
     return navn;
+  }
+
+  public String getFornavn() {
+    navn = navn.toLowerCase();
+
+    String text = navn;
+
+    String firstWord = "";
+    String secondWord = "";
+    int index = text.indexOf(' ');
+
+    if (index > -1) { // Check if there is more than one word.
+
+      firstWord = text.substring(0, index).trim(); // Extract first word.
+      secondWord = text.substring(index + 1, text.length());
+
+    } else {
+      firstWord = text; // Text is the first word itself.
+    }
+    return firstWord;
   }
 
   public void setNavn(String navn) {
@@ -64,14 +82,6 @@ public Medlem (String navn, int alder, String eMail, int telefonNr, Køn køn, S
     this.køn = køn;
   }
 
-  public SvømmerHold getSvømmerHold() {
-    return svømmerHold;
-  }
-
-  public void setSvømmerHold(SvømmerHold svømmerHold) {
-    this.svømmerHold = svømmerHold;
-  }
-
   public MedlemskabsStatus getMedlemskabsStatus() {
     return medlemskabsStatus;
   }
@@ -80,12 +90,23 @@ public Medlem (String navn, int alder, String eMail, int telefonNr, Køn køn, S
     this.medlemskabsStatus = medlemskabsStatus;
   }
 
-  public Svømmedisciplin getSvømmedisciplin() {
-    return svømmedisciplin;
+  public boolean isInRestance() {
+    return isInRestance;
   }
 
-  public void setSvømmedisciplin(Svømmedisciplin svømmedisciplin) {
-    this.svømmedisciplin = svømmedisciplin;
+  public void setInRestance(boolean inRestance) {
+    isInRestance = inRestance;
+  }
+
+  @Override
+  public String toString() {
+    return "Navn: "+navn +" "
+        + " " + alder + " år "+" "
+        + "Email: " + eMail+" "
+        + "tlf nr: " + telefonNr +" "+
+        "Køn: " + køn +" "+
+        "Restance: " + isInRestance +" "+
+        "MedlemskabsStatus " + medlemskabsStatus+"\n";
   }
 
 }

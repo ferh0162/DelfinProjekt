@@ -1,10 +1,13 @@
 package com.company;
 
+import java.io.FileNotFoundException;
+
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws FileNotFoundException, InterruptedException {
 	// write your code here
-        System.out.println("hello");
-        System.out.println("test2");
+Ui ui = new Ui();
+
+ui.start();
     }
 }
