@@ -1,29 +1,78 @@
 package com.company;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+
 //TODO: lave konkurrence svømmer til en arveklasse, da den skal have flere attributter som svømmedisciplin
 public class Medlem {
-
+ protected static int nummer = 1000;
+ protected int medlemsNummer;
   protected String navn;
   protected int alder;
   protected String eMail;
   protected int telefonNr;
-  protected Køn køn;
   protected boolean isInRestance;
   protected MedlemskabsStatus medlemskabsStatus;
+  protected SvømmeType svømmeType;
+  protected Svømmedisciplin svømmedisciplin;
+  protected LocalTime svømmeTid;
+  protected LocalDate svømmeDato;
 
 
-  public Medlem(String navn, int alder, String eMail, int telefonNr) {
-
+  public Medlem(String navn, int alder, String eMail, int telefonNr, MedlemskabsStatus medlemskabsStatus, boolean isInRestance, SvømmeType svømmeType) {
     this.navn = navn;
     this.alder = alder;
     this.eMail = eMail;
     this.telefonNr = telefonNr;
-    isInRestance = false;
-    medlemskabsStatus = MedlemskabsStatus.AKTIV;
+    this.isInRestance = isInRestance;
+    this.medlemskabsStatus = medlemskabsStatus;
+    this.svømmeType = svømmeType;
+    this.medlemsNummer = nummer++;
   }
+
+  public static int getNummer() {
+    return nummer;
+  }
+
+  public static void setNummer(int nummer) {
+    Medlem.nummer = nummer;
+  }
+
+  public Svømmedisciplin getSvømmedisciplin() {
+    return svømmedisciplin;
+  }
+
+  public void setSvømmedisciplin(Svømmedisciplin svømmedisciplin) {
+    this.svømmedisciplin = svømmedisciplin;
+  }
+
+  public LocalTime getSvømmeTid() {
+    return svømmeTid;
+  }
+
+  public void setSvømmeTid(LocalTime svømmeTid) {
+    this.svømmeTid = svømmeTid;
+  }
+
+  public LocalDate getSvømmeDato() {
+    return svømmeDato;
+  }
+
+  public void setSvømmeDato(LocalDate svømmeDato) {
+    this.svømmeDato = svømmeDato;
+  }
+
 
   public String getNavn() {
     return navn;
+  }
+
+  public SvømmeType getSvømmeType() {
+    return svømmeType;
+  }
+
+  public void setSvømmeType(SvømmeType svømmeType) {
+    this.svømmeType = svømmeType;
   }
 
   public String getFornavn() {
@@ -74,13 +123,7 @@ public class Medlem {
     this.telefonNr = telefonNr;
   }
 
-  public Køn getKøn() {
-    return køn;
-  }
 
-  public void setKøn(Køn køn) {
-    this.køn = køn;
-  }
 
   public MedlemskabsStatus getMedlemskabsStatus() {
     return medlemskabsStatus;
@@ -98,15 +141,24 @@ public class Medlem {
     isInRestance = inRestance;
   }
 
+  public int getMedlemsNummer() {
+    return medlemsNummer;
+  }
+
+  public void setMedlemsNummer(int medlemsNummer) {
+    this.medlemsNummer = medlemsNummer;
+  }
+
   @Override
   public String toString() {
-    return "Navn: "+navn +" "
+    return "Nr. " + medlemsNummer + " " +
+        "Navn: "+navn +" "
         + " " + alder + " år "+" "
         + "Email: " + eMail+" "
         + "tlf nr: " + telefonNr +" "+
-        "Køn: " + køn +" "+
         "Restance: " + isInRestance +" "+
-        "MedlemskabsStatus " + medlemskabsStatus+"\n";
+        "MedlemskabsStatus " + medlemskabsStatus+" " +
+        "Svømme type: " + svømmeType+"\n";
   }
 
 }

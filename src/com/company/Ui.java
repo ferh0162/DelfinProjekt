@@ -2,7 +2,11 @@ package com.company;
 
 import com.sun.jdi.ClassNotLoadedException;
 
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.time.DateTimeException;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Scanner;
 
 public class Ui {
@@ -19,7 +23,7 @@ public class Ui {
       System.out.println();
       switch (mainMenu()) {
         case 0 -> {
-          System.out.println(Color.RED+"HAR DU HUSKET AT GEMME DINE NYE REGISTRERINGER?"+Color.RESET);
+          System.out.println(Color.RED + "HAR DU HUSKET AT GEMME DINE NYE REGISTRERINGER?" + Color.RESET);
           exit();
         }
         case 1 -> list();
@@ -30,22 +34,23 @@ public class Ui {
       }
     }
   }
+
   public void exit() throws FileNotFoundException, InterruptedException {
     menu();
   }
 
   public int mainMenu() {
     System.out.println("""
-                Main menu
-                ---------
-                1) Vis alle medlemmere
-                2) Registrer nyt medlem
-                3) Smid et medlem ud fra klubben
-                4) Load medlemmere fra fil
-                5) Gem medlemmere til file
-                                
-                0) Exit application
-                """);
+        Main menu
+        ---------
+        1) Vis alle medlemmere
+        2) Registrer nyt medlem
+        3) Smid et medlem ud fra klubben
+        4) Load medlemmere fra fil
+        5) Gem medlemmere til file
+                        
+        0) Exit application
+        """);
     Scanner input = new Scanner(System.in);
     int choice = input.nextInt();
     while (choice < 0 || choice > 7) {
@@ -56,11 +61,11 @@ public class Ui {
   }
 
   public void medlemsRegistrering() throws FileNotFoundException {
+//TODO: HVIS DER INDTASTES EN TAL ISTEDET FOR STRING CRASHER PROGRAMMET. DETTE SKAL RETTES
 
     System.out.println("Opret ny medlem\n-----------------");
     Scanner input = new Scanner(System.in);
-    //TODO: fulde navn skal registreres
-    System.out.print("Navn: ");
+    System.out.print("Fulde Navn: ");
     String navn = input.nextLine();
     System.out.print("alder: ");
     int alder = input.nextInt();
@@ -73,34 +78,56 @@ public class Ui {
     int telefonNr = input.nextInt();
     input.nextLine();
 
-    //opretter ny medlem i MedlemmerBase
-medlemmerBase.opretNyMedlem(navn,alder,eMail,telefonNr);
+    System.out.println("Hvilken svømmeType er du?");
+    System.out.println("1.  Motionist");
+    System.out.println("2.  Konkurrence Svømmer");
+    int choice = input.nextInt();
+    SvømmeType svømmeType = SvømmeType.MOTIONIST;
+    while (choice < 1 || choice > 2) {
+      System.out.println("Du kan kun vælge mellem 1-2");
+      choice = input.nextInt();
+    }
+      switch (choice) {
+        case 1 -> svømmeType = SvømmeType.MOTIONIST;
+        case 2 -> svømmeType = SvømmeType.KONKURRENCESVØMMER;
+      }
+
+      //opretter ny medlem i MedlemmerBase
+      medlemmerBase.opretNyMedlem(navn, alder, eMail, telefonNr, MedlemskabsStatus.AKTIV, false, svømmeType);
+
+    }
+
+
+
+  public void list() {
+    System.out.println("Liste over alle medlemmere");
+    System.out.println("-----------------------");
+    for (Medlem medlem : medlemmerBase.getAllMedlemmere()) {
+      System.out.println(Color.YELLOW + medlem + Color.RESET);
+    }
+    System.out.println("Der er " + medlemmerBase.getMedlemCount() + " medlemmere i klubben.");
   }
 
-  public void list(){
-      System.out.println("Liste over alle medlemmere");
-      System.out.println("-----------------------");
-      for (Medlem medlem : medlemmerBase.getAllMedlemmere()) {
-        System.out.println(Color.YELLOW + medlem+ Color.RESET);
-      }
-      System.out.println("Der er " + medlemmerBase.getMedlemCount() + " medlemmere i klubben.");
-  }
   public void velkommenBesked() throws InterruptedException {
     System.out.println("DELFINENS ADMINISTRATIVE SYSTEM");
-loadingSkærm();
+    loadingSkærm();
   }
+
   public void start() throws InterruptedException, FileNotFoundException {
     velkommenBesked();
+    load();
     menu();
   }
 
   public void menu() throws FileNotFoundException, InterruptedException {
     clearScreen();
-    System.out.println("==========================================");
+medlemmerBase.saveDatabase();
+System.out.println("==========================================");
     System.out.println("Vælg mellem følgende valgmuligheder\n");
-    System.out.println("1.  Registrer nyt medlem");
-    System.out.println("2.  Tilgå kontingent betalinger");
-    System.out.println("3.  Exit");
+    System.out.println("1.  Indregisterings portal");
+    System.out.println("2.  Kassere portal");
+    System.out.println("3.  Træner portal");
+    System.out.println("0.  Exit");
 
     Scanner input = new Scanner(System.in);
     int choice = input.nextInt();
@@ -112,26 +139,30 @@ loadingSkærm();
       switch (choice) {
         case 1 -> medlemsSystem();
         case 2 -> kassere();
-        case 3 -> {
+        case 3 -> træner();
+        case 0 -> {
           clearScreen();
           clearScreen();
-          System.out.println(Color.RED+"APPLICATION AFSLUTTET"+Color.RESET);
+          System.out.println(Color.RED + "APPLICATION AFSLUTTET" + Color.RESET);
           System.exit(0);
         }
       }
     }
   }
+
   public void save() throws FileNotFoundException {
-    System.out.println(Color.GREEN+"Saving the database ...");
+    System.out.println(Color.GREEN + "Saving the database ...");
     medlemmerBase.saveDatabase();
     System.out.println("Saving database completed succesfully");
-    System.out.println("You can now exit the application"+Color.RESET);
+    System.out.println("You can now exit the application" + Color.RESET);
   }
+
   public void load() throws FileNotFoundException {
-    System.out.println(Color.GREEN+"Loading the database ...");
+    System.out.println(Color.GREEN + "Loading the database ...");
     medlemmerBase.loadDatabase();
-    System.out.println("Done!"+Color.RESET);
+    System.out.println("Done!" + Color.RESET);
   }
+
   public void delete() {
     System.out.println("Slet medlem");
     System.out.println("-------------");
@@ -156,11 +187,12 @@ loadingSkærm();
     System.out.println(firstWord);
     boolean success = medlemmerBase.sletMedlem(firstWord);
     if (success) {
-      System.out.println(Color.GREEN+"Medlemmet med navnet '" +Color.RESET+ name +Color.GREEN+ "' er blevet afksrivet fra klubben"+Color.RESET);
+      System.out.println(Color.GREEN + "Medlemmet med navnet '" + Color.RESET + name + Color.GREEN + "' er blevet afksrivet fra klubben" + Color.RESET);
     } else {
-      System.out.println(Color.RED+"Medlemmet '" +Color.RESET+ name +Color.RED+ "' findes ikke, og kan derfor ikke blive afskrivet fra klubben"+Color.RESET);
+      System.out.println(Color.RED + "Medlemmet '" + Color.RESET + name + Color.RED + "' findes ikke, og kan derfor ikke blive afskrivet fra klubben" + Color.RESET);
     }
   }
+
   public void kassere() throws FileNotFoundException, InterruptedException {
     System.out.println();
     System.out.println("========================================");
@@ -169,16 +201,16 @@ loadingSkærm();
     System.out.println("2.  Oversigt over samlede betalinger");
     System.out.println("3.  Oversigt over restance liste");
     System.out.println("4.  Sæt medlem i Restance");
-    System.out.println("");
+    System.out.println("0.  Menu");
 
     Scanner input = new Scanner(System.in);
     int choice = input.nextInt();
-    while (choice < 1 || choice > 5) {
-      System.out.println("Du kan kun vælge mellem 1-5");
+    while (choice < 0 || choice > 4) {
+      System.out.println("Du kan kun vælge mellem 0-4");
       choice = input.nextInt();
     }
 
-    switch (choice){
+    switch (choice) {
       case 1 -> kontingentOversigt();
       case 2 -> samletBetalingsOversigt();
       case 3 -> hentRestance();
@@ -186,8 +218,9 @@ loadingSkærm();
       case 0 -> menu();
     }
   }
+
   public void loadingSkærm() throws InterruptedException {
-    for (int i = 0; i < 3; i++) {
+   /* for (int i = 0; i < 1; i++) {
       System.out.println(".");
       Thread.sleep(300);
       System.out.println(".");
@@ -201,32 +234,35 @@ loadingSkærm();
       }
     }
     System.out.println();
-    System.out.println(".");
-    Thread.sleep(300);
-    System.out.println(".");
-    Thread.sleep(300);
-    System.out.println(Color.GREEN_BOLD+"Programmet Kører"+Color.RESET);
-    Thread.sleep(800);
 
-clearScreen();
+    Thread.sleep(700);
+    System.out.println(Color.GREEN_BOLD + "Programmet Kører" + Color.RESET);
+    Thread.sleep(1300);
+*/
+    clearScreen();
   }
+
   public void kontingentOversigt() throws FileNotFoundException {
     clearScreen();
     medlemmerBase.hentKontingentOversigt();
   }
+
   public void samletBetalingsOversigt() throws FileNotFoundException {
     clearScreen();
-    System.out.println(Color.YELLOW_BOLD+medlemmerBase.hentSamletBetaling()+" kr." + Color.RESET);
+    System.out.println(Color.YELLOW_BOLD + medlemmerBase.hentSamletBetaling() + " kr." + Color.RESET);
     System.out.println();
   }
-  public void hentRestance(){
+
+  public void hentRestance() {
     medlemmerBase.hentIRestance();
   }
-  public void clearScreen(){
+
+  public void clearScreen() {
     System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n");
 
   }
-  public void setIRestance(){
+
+  public void setIRestance() {
     System.out.println("Sæt medlem i restance");
     System.out.println("-------------");
     System.out.println("Venligst skriv fornavnet, på det medlem der skal sættes i restance: ");
@@ -250,10 +286,124 @@ clearScreen();
     System.out.println(firstWord);
     boolean success = medlemmerBase.setMedlemIRestance(firstWord);
     if (success) {
-      System.out.println(Color.GREEN+"Medlemmet med navnet '" +Color.RESET+ name +Color.GREEN+ "' er blevet sat i restance"+Color.RESET);
+      System.out.println(Color.GREEN + "Medlemmet med navnet '" + Color.RESET + name + Color.GREEN + "' er blevet sat i restance" + Color.RESET);
     } else {
-      System.out.println(Color.RED+"Medlemmet '" +Color.RESET+ name +Color.RED+ "' findes ikke, og kan derfor ikke blive sat i restance"+Color.RESET);
+      System.out.println(Color.RED + "Medlemmet '" + Color.RESET + name + Color.RED + "' findes ikke, og kan derfor ikke blive sat i restance" + Color.RESET);
     }
 
+  }
+
+  public void træner() throws InterruptedException, FileNotFoundException{
+    System.out.println("==========================================");
+    System.out.println("Vælg mellem følgende valgmuligheder\n");
+    System.out.println("1.  Se hold oversigt");
+    System.out.println("2.  Se svømmedisciplin");
+    System.out.println("3.  gem svømmedsicplin");
+    System.out.println("4.  registrer disciplin");
+    System.out.println("0.  Exit");
+
+    Scanner input = new Scanner(System.in);
+    int choice = input.nextInt();
+    while (choice < 0 || choice > 4) {
+      System.out.println("Only values 0-4 allowed");
+      choice = input.nextInt();
+    }
+      switch (choice) {
+        case 1 -> seHoldOversigt();
+        case 2 -> svømmeDisciplinPåEnkelteSvømmer();
+        case 3 -> lavKonkurrenceSvømmere();
+        case 4 -> registerDisciplin();
+        case 0 -> menu();
+      }
+    }
+
+  public void seHoldOversigt() throws InterruptedException, FileNotFoundException{
+    //TODO: Lav senior- og juniorkonkurrence svømmer
+    System.out.println("======================================");
+    System.out.println("Velkommen til konkurrence Svømmer portalen");
+    System.out.println("1. Se Junior holdet");
+    System.out.println("2. Se Senior Holder");
+    System.out.println("0. Returner til træner programmet");
+    System.out.println();
+
+Scanner input = new Scanner(System.in);
+    int choice = input.nextInt();
+    while (choice < 0 || choice > 2) {
+      System.out.println("Du kan kun vælge mellem 0-2");
+      choice = input.nextInt();
+    }
+    switch (choice) {
+      case 1 -> seHoldJunior();
+      case 2 -> seHoldSenior();
+      case 0 -> træner();
+    }
+  }
+  public void seHoldJunior(){
+    medlemmerBase.seJuniorHold();
+  }
+  public void seHoldSenior(){
+    medlemmerBase.seSeniorHold();
+  }
+  public void svømmeDisciplinPåEnkelteSvømmer(){
+    //TODO: Lav en 4 CSV fil med top 5 over disciplin
+    seHoldJunior();
+    seHoldSenior();
+
+    System.out.println("Hvilken person vil du gerne se svømmedisciplin på?");
+  }
+  public void lavKonkurrenceSvømmere() throws FileNotFoundException {
+    medlemmerBase.lavKonkurrenceSvømmerDisciplin();
+  }
+  public void registerDisciplin() {
+    System.out.println("Opret disciplin for medlem\n-----------------");
+    Scanner input = new Scanner(System.in);
+    System.out.println("Indtast navnet på den person, som skal regsistrere disciplin");
+    String navn = input.nextLine();
+    if (!medlemmerBase.checkOmMedlemEksistere(navn)) {
+      System.out.println("Indtast venligst navn igen");
+      registerDisciplin();
+    } else if (medlemmerBase.checkOmMedlemEksistere(navn)) {
+
+
+      System.out.println("Vælg disciplin: ");
+      System.out.println("1. Brystsvømning");
+      System.out.println("2. Butterfly");
+      System.out.println("3. Crawl");
+      System.out.println("4. RygCrawl");
+      System.out.println("0. ingen disciplin");
+
+      int choice = input.nextInt();
+      Svømmedisciplin svømmedisciplin = Svømmedisciplin.CRAWL;
+      while (choice < 1 || choice > 4) {
+        System.out.println("Du kan kun vælge mellem 1-4");
+        choice = input.nextInt();
+      }
+      switch (choice) {
+        case 1 -> svømmedisciplin = Svømmedisciplin.BRYSTSVØMNING;
+        case 2 -> svømmedisciplin = Svømmedisciplin.BUTTERFLY;
+        case 3 -> svømmedisciplin = Svømmedisciplin.CRAWL;
+        case 4 -> svømmedisciplin = Svømmedisciplin.RYGCRAWL;
+        case 0 -> svømmedisciplin = null;
+      }
+
+      //TODO: Hvis man skriver det i forkert format, så skal programmet ikke crashe
+      System.out.println("Indtast venligst din tid i dette format 00:00");
+      //String time = input.next();
+      LocalTime svømmeTid = null;
+      boolean kører = true;
+      while (kører) {
+        try {
+          svømmeTid = LocalTime.parse(input.next());
+          kører = false;
+        } catch (DateTimeException e) {
+          System.out.println("Du skal indtaste i dette format 00:00");
+        }
+      }
+
+      System.out.println("indtast venligst datoen for svømmeturen i dette format 2000-12-30");
+      LocalDate svømmeDato = LocalDate.parse(input.next());
+
+      medlemmerBase.setDisciplin(navn, svømmedisciplin, svømmeTid, svømmeDato);
+    }
   }
 }
