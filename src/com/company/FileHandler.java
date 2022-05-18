@@ -34,9 +34,10 @@ public class FileHandler {
   }
 public void saveKonkurrenceSvømmereToFile(ArrayList<Medlem> medlemmere) throws FileNotFoundException{
     PrintStream out = new PrintStream(("KonkurrenceSvømmere.csv"));
+
     for (Medlem medlem : medlemmere){
       if (medlem.getSvømmeType() == SvømmeType.KONKURRENCESVØMMER) {
-        out.print(medlem.getNavn());
+        out.print(medlem.getMedlemsNummer());
         out.print(";");
         out.print(medlem.getSvømmedisciplin());
         out.print(";");
@@ -57,6 +58,16 @@ public void saveKonkurrenceSvømmereToFile(ArrayList<Medlem> medlemmere) throws 
       String line = fileScanner.nextLine();
 
       Medlem medlem = readMedlemmere(line);
+
+      //TODO: modtag samme medlem, med parameterne svømmeNummer, svømmeDisciplin, svømmeTid og svømmeDato
+ArrayList<Medlem> konkurrenceSvømmere = loadKonkurrenceMedlemmereFraFil();
+      for (Medlem konkurrenceMedlem: konkurrenceSvømmere) {
+        if (konkurrenceMedlem.getMedlemsNummer() == medlem.getMedlemsNummer()){
+          medlem.setSvømmedisciplin(konkurrenceMedlem.getSvømmedisciplin());
+          medlem.setSvømmeTid(konkurrenceMedlem.getSvømmeTid());
+          medlem.setSvømmeDato(konkurrenceMedlem.getSvømmeDato());
+        }
+      }
 
       medlemmere.add(medlem);
     }
@@ -82,4 +93,34 @@ public void saveKonkurrenceSvømmereToFile(ArrayList<Medlem> medlemmere) throws 
     return medlem;
   }
 
+  public ArrayList<Medlem> loadKonkurrenceMedlemmereFraFil() throws FileNotFoundException {
+
+    ArrayList<Medlem> medlemmere = new ArrayList<>();
+
+    Scanner fileScanner = new Scanner(new File("KonkurrenceSvømmere.csv"));
+    while (fileScanner.hasNextLine()) {
+      String line = fileScanner.nextLine();
+
+      Medlem medlem = readKonkurrenceSvømmere(line);
+
+      medlemmere.add(medlem);
+    }
+    return medlemmere;
+  }
+
+
+  public Medlem readKonkurrenceSvømmere(String line){
+
+    Scanner input = new Scanner(line).useDelimiter(";").useLocale(Locale.ENGLISH);
+
+    int medlemsnummer = input.nextInt();
+    Svømmedisciplin svømmeDisciplin = Svømmedisciplin.valueOf(input.next());
+    LocalTime svømmeTid = LocalTime.parse(input.next());
+    LocalDate svømmeDato = LocalDate.parse(input.next());
+
+    Medlem medlem = new Medlem(medlemsnummer,svømmeDisciplin,svømmeTid,svømmeDato);
+    medlem.setMedlemsNummer(medlemsnummer);
+
+    return medlem;
+  }
 }

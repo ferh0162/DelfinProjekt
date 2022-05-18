@@ -1,9 +1,12 @@
 package com.company;
 
+import javax.swing.*;
 import java.io.FileNotFoundException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 
 public class MedlemmerBase {
   private ArrayList<Medlem> medlemmere;
@@ -144,7 +147,7 @@ public class MedlemmerBase {
     for (int i = 0; i < medlemmere.size(); i++) {
       Medlem medlem = medlemmere.get(i);
       if (medlem.getAlder() >= 18 && medlem.getSvømmeType() == SvømmeType.KONKURRENCESVØMMER) {
-        System.out.println(medlem.getNavn());
+        System.out.println(medlem.getNavn() + " "+ medlem.getSvømmedisciplin()+" " + medlem.getSvømmeTid() + " " + medlem.getSvømmeDato());
 
       }
     }
@@ -153,9 +156,24 @@ public class MedlemmerBase {
     for (Medlem medlem : medlemmere) {
       if (medlem.getFornavn().equalsIgnoreCase(navn)) {
         return medlem;
+      } else if (medlem.getNavn().equalsIgnoreCase(navn)){
+        return medlem;
       }
     }
     return null;
+  }
+  public Medlem findMedlemByMedlemsNummer(int medlemsNummer){
+    for (Medlem medlem : medlemmere){
+      if (medlem.getMedlemsNummer() == medlemsNummer){
+        return medlem;
+      }
+    }
+    return null;
+  }
+  public void loadKonkurrenceSvømmerDisciplin() throws FileNotFoundException {
+    FileHandler fileHandler = new FileHandler();
+    medlemmere = fileHandler.loadKonkurrenceMedlemmereFraFil();
+
   }
 
   public void lavKonkurrenceSvømmerDisciplin() throws FileNotFoundException{
@@ -166,26 +184,42 @@ public class MedlemmerBase {
   setDisciplin(String navn, Svømmedisciplin svømmedisciplin, LocalTime svømmeTid, LocalDate svømmeDato) {
     // find animal with this name
     Medlem medlem = findMedlemByName(navn);
-    if (medlem == null) {
-      System.out.println("Medlem findes ikke");
-    } else {
-      System.out.println("Medlem findes");
       medlem.setSvømmedisciplin(svømmedisciplin);
       medlem.setSvømmeTid(svømmeTid);
       medlem.setSvømmeDato(svømmeDato);
 
     }
-  }
+
 public boolean checkOmMedlemEksistere(String navn) {
   Medlem medlem = findMedlemByName(navn);
   if (medlem == null) {
-    System.out.println(Color.RED+"Medlem findes ikke"+Color.RESET);
     return false;
   } else {
-    System.out.println(Color.GREEN_BOLD+"Medlemmet"+ medlem.getNavn()+"er fundet"+Color.RESET);
     return true;
   }
 }
+
+  public void sorterLocalTime(){
+
+    ArrayList<LocalTime> brystSvømning = new ArrayList<>();
+    for (int i = 0; i < medlemmere.size(); i++) {
+      if (medlemmere.get(i).getSvømmeType() != SvømmeType.KONKURRENCESVØMMER){
+
+      } else if (medlemmere.get(i).getSvømmeType() == SvømmeType.KONKURRENCESVØMMER && medlemmere.get(i).getSvømmedisciplin() == Svømmedisciplin.BRYSTSVØMNING){
+        brystSvømning.add(medlemmere.get(i).getSvømmeTid());
+      }
+    }
+    Collections.sort(brystSvømning);
+
+    for (int i = 0; i < medlemmere.size(); i++) {
+      if (medlemmere.get(i).getSvømmeType() == SvømmeType.KONKURRENCESVØMMER && medlemmere.get(i).getSvømmedisciplin() == Svømmedisciplin.BRYSTSVØMNING) {
+
+        System.out.println(medlemmere.get(i).getNavn() + " " + medlemmere.get(i).getSvømmeTid());
+      }
+    }
+    System.out.println(brystSvømning);
+  }
+
   @Override
   public String toString() {
     return "MedlemmerBase{" +

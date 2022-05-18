@@ -30,6 +30,13 @@ public class Medlem {
     this.medlemsNummer = nummer++;
   }
 
+  public Medlem(int medlemsNummer, Svømmedisciplin svømmedisciplin, LocalTime svømmeTid, LocalDate svømmeDato){
+    this.medlemsNummer=medlemsNummer;
+    this.svømmedisciplin = svømmedisciplin;
+    this.svømmeTid = svømmeTid;
+    this.svømmeDato = svømmeDato;
+  }
+
   public static int getNummer() {
     return nummer;
   }

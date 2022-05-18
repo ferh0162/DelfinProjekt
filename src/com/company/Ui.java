@@ -1,12 +1,10 @@
 package com.company;
 
-import com.sun.jdi.ClassNotLoadedException;
-
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Ui {
@@ -87,16 +85,15 @@ public class Ui {
       System.out.println("Du kan kun vælge mellem 1-2");
       choice = input.nextInt();
     }
-      switch (choice) {
-        case 1 -> svømmeType = SvømmeType.MOTIONIST;
-        case 2 -> svømmeType = SvømmeType.KONKURRENCESVØMMER;
-      }
-
-      //opretter ny medlem i MedlemmerBase
-      medlemmerBase.opretNyMedlem(navn, alder, eMail, telefonNr, MedlemskabsStatus.AKTIV, false, svømmeType);
-
+    switch (choice) {
+      case 1 -> svømmeType = SvømmeType.MOTIONIST;
+      case 2 -> svømmeType = SvømmeType.KONKURRENCESVØMMER;
     }
 
+    //opretter ny medlem i MedlemmerBase
+    medlemmerBase.opretNyMedlem(navn, alder, eMail, telefonNr, MedlemskabsStatus.AKTIV, false, svømmeType);
+
+  }
 
 
   public void list() {
@@ -121,8 +118,7 @@ public class Ui {
 
   public void menu() throws FileNotFoundException, InterruptedException {
     clearScreen();
-medlemmerBase.saveDatabase();
-System.out.println("==========================================");
+    System.out.println("==========================================");
     System.out.println("Vælg mellem følgende valgmuligheder\n");
     System.out.println("1.  Indregisterings portal");
     System.out.println("2.  Kassere portal");
@@ -293,11 +289,11 @@ System.out.println("==========================================");
 
   }
 
-  public void træner() throws InterruptedException, FileNotFoundException{
+  public void træner() throws InterruptedException, FileNotFoundException {
     System.out.println("==========================================");
     System.out.println("Vælg mellem følgende valgmuligheder\n");
     System.out.println("1.  Se hold oversigt");
-    System.out.println("2.  Se svømmedisciplin");
+    System.out.println("2.  Top 5");
     System.out.println("3.  gem svømmedsicplin");
     System.out.println("4.  registrer disciplin");
     System.out.println("0.  Exit");
@@ -308,16 +304,16 @@ System.out.println("==========================================");
       System.out.println("Only values 0-4 allowed");
       choice = input.nextInt();
     }
-      switch (choice) {
-        case 1 -> seHoldOversigt();
-        case 2 -> svømmeDisciplinPåEnkelteSvømmer();
-        case 3 -> lavKonkurrenceSvømmere();
-        case 4 -> registerDisciplin();
-        case 0 -> menu();
-      }
+    switch (choice) {
+      case 1 -> seHoldOversigt();
+      case 2 -> top5();
+      case 3 -> saveSvømmeDisciplin();
+      case 4 -> registerDisciplin();
+      case 0 -> menu();
     }
+  }
 
-  public void seHoldOversigt() throws InterruptedException, FileNotFoundException{
+  public void seHoldOversigt() throws InterruptedException, FileNotFoundException {
     //TODO: Lav senior- og juniorkonkurrence svømmer
     System.out.println("======================================");
     System.out.println("Velkommen til konkurrence Svømmer portalen");
@@ -326,7 +322,7 @@ System.out.println("==========================================");
     System.out.println("0. Returner til træner programmet");
     System.out.println();
 
-Scanner input = new Scanner(System.in);
+    Scanner input = new Scanner(System.in);
     int choice = input.nextInt();
     while (choice < 0 || choice > 2) {
       System.out.println("Du kan kun vælge mellem 0-2");
@@ -338,32 +334,29 @@ Scanner input = new Scanner(System.in);
       case 0 -> træner();
     }
   }
-  public void seHoldJunior(){
+
+  public void seHoldJunior() {
     medlemmerBase.seJuniorHold();
   }
-  public void seHoldSenior(){
+
+  public void seHoldSenior() {
     medlemmerBase.seSeniorHold();
   }
-  public void svømmeDisciplinPåEnkelteSvømmer(){
-    //TODO: Lav en 4 CSV fil med top 5 over disciplin
-    seHoldJunior();
-    seHoldSenior();
 
-    System.out.println("Hvilken person vil du gerne se svømmedisciplin på?");
-  }
-  public void lavKonkurrenceSvømmere() throws FileNotFoundException {
+  public void saveSvømmeDisciplin() throws FileNotFoundException {
     medlemmerBase.lavKonkurrenceSvømmerDisciplin();
   }
-  public void registerDisciplin() {
+
+  public void registerDisciplin() throws FileNotFoundException, InterruptedException {
     System.out.println("Opret disciplin for medlem\n-----------------");
     Scanner input = new Scanner(System.in);
     System.out.println("Indtast navnet på den person, som skal regsistrere disciplin");
     String navn = input.nextLine();
     if (!medlemmerBase.checkOmMedlemEksistere(navn)) {
-      System.out.println("Indtast venligst navn igen");
-      registerDisciplin();
+      System.out.println(Color.RED+"Medlem findes ikke"+Color.RESET);
+      træner();
     } else if (medlemmerBase.checkOmMedlemEksistere(navn)) {
-
+      System.out.println(Color.GREEN_BOLD+"Medlemmet "+ navn+" er fundet"+Color.RESET);
 
       System.out.println("Vælg disciplin: ");
       System.out.println("1. Brystsvømning");
@@ -372,12 +365,17 @@ Scanner input = new Scanner(System.in);
       System.out.println("4. RygCrawl");
       System.out.println("0. ingen disciplin");
 
-      int choice = input.nextInt();
-      Svømmedisciplin svømmedisciplin = Svømmedisciplin.CRAWL;
-      while (choice < 1 || choice > 4) {
-        System.out.println("Du kan kun vælge mellem 1-4");
+      Svømmedisciplin svømmedisciplin = null;
+
+      //TODO: Hvis man skriver String istedet for en int skal programmet ikke crashe
+int choice = input.nextInt();
+
+
+      while (choice < 0 || choice > 4) {
+        System.out.println("Kun tal fra 1-4 er tilladt");
         choice = input.nextInt();
       }
+
       switch (choice) {
         case 1 -> svømmedisciplin = Svømmedisciplin.BRYSTSVØMNING;
         case 2 -> svømmedisciplin = Svømmedisciplin.BUTTERFLY;
@@ -386,24 +384,39 @@ Scanner input = new Scanner(System.in);
         case 0 -> svømmedisciplin = null;
       }
 
-      //TODO: Hvis man skriver det i forkert format, så skal programmet ikke crashe
+      System.out.println("-------------------------------");
+      System.out.println("indtast svømme tid");
       System.out.println("Indtast venligst din tid i dette format 00:00");
-      //String time = input.next();
       LocalTime svømmeTid = null;
-      boolean kører = true;
-      while (kører) {
+      boolean isNotLocalTime = true;
+      while (isNotLocalTime) {
         try {
           svømmeTid = LocalTime.parse(input.next());
-          kører = false;
+          isNotLocalTime = false;
         } catch (DateTimeException e) {
           System.out.println("Du skal indtaste i dette format 00:00");
         }
       }
-
-      System.out.println("indtast venligst datoen for svømmeturen i dette format 2000-12-30");
-      LocalDate svømmeDato = LocalDate.parse(input.next());
+      System.out.println("--------------------------------");
+      System.out.println("indtast venligst datoen for svømmeturen i dette format 0000-00-00");
+      System.out.println("År - Måned - Dag");
+      LocalDate svømmeDato = null;
+      boolean isNotLocalDate = true;
+      while (isNotLocalDate) {
+        try {
+          svømmeDato = LocalDate.parse(input.next());
+          isNotLocalDate = false;
+        } catch (DateTimeException e) {
+          System.out.println("Du skal indtaste i dette format 0000-00-00");
+          System.out.println("År - Måned - Dag");
+          System.out.println();
+        }
+      }
 
       medlemmerBase.setDisciplin(navn, svømmedisciplin, svømmeTid, svømmeDato);
     }
+  }
+  public void top5(){
+medlemmerBase.sorterLocalTime();
   }
 }
