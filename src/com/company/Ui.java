@@ -126,11 +126,23 @@ public class Ui {
     System.out.println("0.  Exit");
 
     Scanner input = new Scanner(System.in);
-    int choice = input.nextInt();
-    while (choice < 0 || choice > 3) {
-      System.out.println("Only values 0-3 allowed");
-      choice = input.nextInt();
+    int choice = 0;
+    boolean loop = true;
+    while (loop) {
+      try {
+        System.out.print("Vælg venligst: ");
+        choice = input.nextInt();
+        while (choice < 0 || choice > 4) {
+          System.out.println(Color.RED+"Kun tal fra 1-4 er tilladt"+Color.RESET);
+          choice = input.nextInt();
+        }
+        loop = false;
+      } catch (InputMismatchException e) {
+        System.out.println(Color.RED + "Skriv venligst et tal og ikke et andet symbol" + Color.RESET);
+        input.nextLine();
+      }
     }
+
     while (true) {
       switch (choice) {
         case 1 -> medlemsSystem();
@@ -200,10 +212,21 @@ public class Ui {
     System.out.println("0.  Menu");
 
     Scanner input = new Scanner(System.in);
-    int choice = input.nextInt();
-    while (choice < 0 || choice > 4) {
-      System.out.println("Du kan kun vælge mellem 0-4");
-      choice = input.nextInt();
+    int choice = 0;
+    boolean loop = true;
+    while (loop) {
+      try {
+        System.out.print("Vælg venligst: ");
+        choice = input.nextInt();
+        while (choice < 0 || choice > 4) {
+          System.out.println(Color.RED+"Kun tal fra 0-4 er tilladt"+Color.RESET);
+          choice = input.nextInt();
+        }
+        loop = false;
+      } catch (InputMismatchException e) {
+        System.out.println(Color.RED + "Skriv venligst et tal og ikke et andet symbol" + Color.RESET);
+        input.nextLine();
+      }
     }
 
     switch (choice) {
@@ -261,6 +284,7 @@ public class Ui {
   public void setIRestance() {
     System.out.println("Sæt medlem i restance");
     System.out.println("-------------");
+    list();
     System.out.println("Venligst skriv fornavnet, på det medlem der skal sættes i restance: ");
 
     Scanner input = new Scanner(System.in);
@@ -299,11 +323,23 @@ public class Ui {
     System.out.println("0.  Exit");
 
     Scanner input = new Scanner(System.in);
-    int choice = input.nextInt();
-    while (choice < 0 || choice > 4) {
-      System.out.println("Only values 0-4 allowed");
-      choice = input.nextInt();
+    int choice = 0;
+    boolean loop = true;
+    while (loop) {
+      try {
+        System.out.print("Vælg venligst: ");
+        choice = input.nextInt();
+        while (choice < 0 || choice > 4) {
+          System.out.println(Color.RED+"Kun tal fra 0-4 er tilladt"+Color.RESET);
+          choice = input.nextInt();
+        }
+        loop = false;
+      } catch (InputMismatchException e) {
+        System.out.println(Color.RED + "Skriv venligst et tal og ikke et andet symbol" + Color.RESET);
+        input.nextLine();
+      }
     }
+
     switch (choice) {
       case 1 -> seHoldOversigt();
       case 2 -> top5();
@@ -323,10 +359,21 @@ public class Ui {
     System.out.println();
 
     Scanner input = new Scanner(System.in);
-    int choice = input.nextInt();
-    while (choice < 0 || choice > 2) {
-      System.out.println("Du kan kun vælge mellem 0-2");
-      choice = input.nextInt();
+    int choice = 0;
+    boolean loop = true;
+    while (loop) {
+      try {
+        System.out.print("Vælg venligst: ");
+        choice = input.nextInt();
+        while (choice < 0 || choice > 2) {
+          System.out.println(Color.RED+"Kun tal fra 0-2 er tilladt"+Color.RESET);
+          choice = input.nextInt();
+        }
+        loop = false;
+      } catch (InputMismatchException e) {
+        System.out.println(Color.RED + "Skriv venligst et tal og ikke et andet symbol" + Color.RESET);
+        input.nextLine();
+      }
     }
     switch (choice) {
       case 1 -> seHoldJunior();
@@ -350,6 +397,12 @@ public class Ui {
   public void registerDisciplin() throws FileNotFoundException, InterruptedException {
     System.out.println("Opret disciplin for medlem\n-----------------");
     Scanner input = new Scanner(System.in);
+
+    for (Medlem medlem : medlemmerBase.getAllMedlemmere()) {
+      System.out.println(Color.YELLOW + medlem.getNavn() + " " +Color.YELLOW_BRIGHT+ medlem.getSvømmedisciplin()+ Color.RESET);
+    }
+    System.out.println("Der er " + medlemmerBase.getMedlemCount() + " medlemmere i klubben.");
+
     System.out.println("Indtast navnet på den person, som skal regsistrere disciplin");
     String navn = input.nextLine();
     if (!medlemmerBase.checkOmMedlemEksistere(navn)) {
@@ -368,12 +421,21 @@ public class Ui {
       Svømmedisciplin svømmedisciplin = null;
 
       //TODO: Hvis man skriver String istedet for en int skal programmet ikke crashe
-int choice = input.nextInt();
-
-
-      while (choice < 0 || choice > 4) {
-        System.out.println("Kun tal fra 1-4 er tilladt");
-        choice = input.nextInt();
+      int choice = 0;
+      boolean loop = true;
+      while (loop) {
+        try {
+          System.out.print("Vælg venligst: ");
+          choice = input.nextInt();
+          while (choice < 0 || choice > 4) {
+            System.out.println(Color.RED+"Kun tal fra 1-4 er tilladt"+Color.RESET);
+            choice = input.nextInt();
+          }
+          loop = false;
+        } catch (InputMismatchException e) {
+          System.out.println(Color.RED + "Skriv venligst et tal og ikke et andet symbol" + Color.RESET);
+          input.nextLine();
+        }
       }
 
       switch (choice) {
@@ -416,7 +478,38 @@ int choice = input.nextInt();
       medlemmerBase.setDisciplin(navn, svømmedisciplin, svømmeTid, svømmeDato);
     }
   }
-  public void top5(){
-medlemmerBase.sorterLocalTime();
+  public void top5() {
+    System.out.println("====================================");
+    System.out.println("se top 5 indenfor disciplin: ");
+    System.out.println("1. Brystsvømning");
+    System.out.println("2. Butterfly");
+    System.out.println("3. Crawl");
+    System.out.println("4. RygCrawl");
+    System.out.println("0. ingen disciplin");
+
+    //TODO: Hvis man skriver String istedet for en int skal programmet ikke crashe
+    Scanner input = new Scanner(System.in);
+    int choice = 0;
+    boolean loop = true;
+    while (loop) {
+      try {
+        System.out.print("Vælg venligst: ");
+        choice = input.nextInt();
+        while (choice < 0 || choice > 4) {
+          System.out.println(Color.RED+"Kun tal fra 1-4 er tilladt"+Color.RESET);
+          choice = input.nextInt();
+        }
+        loop = false;
+      } catch (InputMismatchException e) {
+        System.out.println(Color.RED + "Skriv venligst et tal og ikke et andet symbol" + Color.RESET);
+        input.nextLine();
+      }
+    }
+    switch (choice) {
+      case 1 -> medlemmerBase.sorterBrystSvømning();
+      case 2 -> medlemmerBase.sorterButterFly();
+      case 3 -> medlemmerBase.sorterCrawl();
+      case 4 -> medlemmerBase.sorterRygCrawl();
+    }
   }
 }
