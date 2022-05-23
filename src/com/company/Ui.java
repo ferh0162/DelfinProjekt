@@ -29,6 +29,7 @@ public class Ui {
         case 3 -> delete();
         case 4 -> load();
         case 5 -> save();
+        case 6 -> redigerMedlem();
       }
     }
   }
@@ -46,13 +47,14 @@ public class Ui {
         3) Smid et medlem ud fra klubben
         4) Load medlemmere fra fil
         5) Gem medlemmere til file
+        6) Rediger medlem
                         
         0) Exit application
         """);
     Scanner input = new Scanner(System.in);
     int choice = input.nextInt();
-    while (choice < 0 || choice > 7) {
-      System.out.println("Only values 0-7 allowed");
+    while (choice < 0 || choice > 6) {
+      System.out.println("Du kan kun vælge mellem 0-6");
       choice = input.nextInt();
     }
     return choice;
@@ -95,6 +97,53 @@ public class Ui {
 
   }
 
+  public void redigerMedlem() throws FileNotFoundException, InterruptedException {
+//TODO: HVIS DER INDTASTES EN TAL ISTEDET FOR STRING CRASHER PROGRAMMET. DETTE SKAL RETTES
+list();
+    Scanner input = new Scanner(System.in);
+
+    System.out.println("Indtast navnet på den person, som skal redigeres");
+    String navn = input.nextLine();
+    if (!medlemmerBase.checkOmMedlemEksistere(navn)) {
+      System.out.println(Color.RED + "Medlem findes ikke" + Color.RESET);
+      Thread.sleep(2000);
+
+redigerMedlem();
+    } else {
+
+      System.out.print("Fulde Navn: ");
+      String findnanvn = input.nextLine();
+      Medlem medlem = medlemmerBase.findMedlemByName(findnanvn);
+
+      System.out.print("alder: ");
+      int alder = input.nextInt();
+
+      System.out.print("Email: ");
+      String eMail = input.next();
+      input.nextLine();
+
+      System.out.print("Telefon nr.: ");
+      int telefonNr = input.nextInt();
+      input.nextLine();
+
+      System.out.println("Hvilken svømmeType er du?");
+      System.out.println("1.  Motionist");
+      System.out.println("2.  Konkurrence Svømmer");
+      int choice = input.nextInt();
+      SvømmeType svømmeType = SvømmeType.MOTIONIST;
+      while (choice < 1 || choice > 2) {
+        System.out.println("Du kan kun vælge mellem 1-2");
+        choice = input.nextInt();
+      }
+      switch (choice) {
+        case 1 -> svømmeType = SvømmeType.MOTIONIST;
+        case 2 -> svømmeType = SvømmeType.KONKURRENCESVØMMER;
+      }
+
+      //opretter ny medlem i MedlemmerBase
+      medlemmerBase.redigerMedlem(medlem, alder, eMail, telefonNr, MedlemskabsStatus.AKTIV, false, svømmeType);
+    }
+  }
 
   public void list() {
     System.out.println("Liste over alle medlemmere");

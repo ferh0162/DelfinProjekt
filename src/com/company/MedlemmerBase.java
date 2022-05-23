@@ -21,6 +21,15 @@ public class MedlemmerBase {
     medlemmere.add(medlem);
   }
 
+  public void redigerMedlem(Medlem medlem, int alder, String eMail, int telefonNr, MedlemskabsStatus medlemskabsStatus, boolean isInRestance, SvømmeType svømmeType){
+    medlem.setAlder(alder);
+   medlem.seteMail(eMail);
+    medlem.setTelefonNr(telefonNr);
+   medlem.setMedlemskabsStatus(medlemskabsStatus);
+   medlem.setInRestance(isInRestance);
+    medlem.setSvømmeType(svømmeType);
+  }
+
   public Iterable<Medlem> getAllMedlemmere() {
     return medlemmere;
   }
@@ -42,14 +51,14 @@ public class MedlemmerBase {
   public void hentKontingentOversigt() throws FileNotFoundException {
     loadDatabase();
     System.out.println();
-    System.out.println("PASSIVE MEDLEMSKAB");
+    System.out.println(Color.WHITE_BOLD_BRIGHT+"PASSIVE MEDLEMSKAB" + Color.RESET);
     for (int i = 0; i < medlemmere.size(); i++) {
       if (!medlemmere.get(i).medlemskabsStatus.equals(MedlemskabsStatus.AKTIV)) {
         System.out.println(Color.PURPLE_BOLD + medlemmere.get(i).getNavn() + Color.RESET + " Betaler: " + Color.YELLOW_BOLD + "500 kr." + Color.RESET);
       }
     }
     System.out.println();
-    System.out.println("JUNIOR MEDLEMSKAB");
+    System.out.println(Color.WHITE_BOLD_BRIGHT+"JUNIOR MEDLEMSKAB" + Color.RESET);
       for (int i = 0; i < medlemmere.size(); i++) {
         if (medlemmere.get(i).getAlder() < 18) {
           System.out.println(Color.PURPLE_BOLD + medlemmere.get(i).getNavn() + Color.RESET + " Betaler: " + Color.YELLOW_BOLD + "1000 kr." + Color.RESET);
@@ -57,7 +66,7 @@ public class MedlemmerBase {
         }
       }
     System.out.println();
-    System.out.println("SENIOR MEDLEMSKAB");
+    System.out.println(Color.WHITE_BOLD_BRIGHT+"SENIOR MEDLEMSKAB"+Color.RESET);
     for (int i = 0; i < medlemmere.size(); i++) {
        if (18 < medlemmere.get(i).getAlder() && medlemmere.get(i).getAlder() < 60) {
         System.out.println(Color.PURPLE_BOLD + medlemmere.get(i).getNavn() + Color.RESET + " Betaler: " + Color.YELLOW_BOLD + "1600 kr." + Color.RESET);
@@ -65,7 +74,7 @@ public class MedlemmerBase {
       }
     }
     System.out.println();
-    System.out.println("60+ ÅR MEDLEMBSKAB");
+    System.out.println(Color.WHITE_BOLD_BRIGHT+"60+ ÅR MEDLEMBSKAB"+Color.RESET);
     for (int i = 0; i < medlemmere.size(); i++) {
       if (60 < medlemmere.get(i).getAlder()) {
         System.out.println(Color.PURPLE_BOLD + medlemmere.get(i).getNavn() + Color.RESET + " Betaler: " + Color.YELLOW_BOLD + "1200 kr." + Color.RESET);
