@@ -132,8 +132,8 @@ public class Ui {
       try {
         System.out.print("Vælg venligst: ");
         choice = input.nextInt();
-        while (choice < 0 || choice > 4) {
-          System.out.println(Color.RED+"Kun tal fra 1-4 er tilladt"+Color.RESET);
+        while (choice < 0 || choice > 3) {
+          System.out.println(Color.RED+"Kun tal fra 0-3 er tilladt"+Color.RESET);
           choice = input.nextInt();
         }
         loop = false;
@@ -318,8 +318,10 @@ public class Ui {
     System.out.println("Vælg mellem følgende valgmuligheder\n");
     System.out.println("1.  Se hold oversigt");
     System.out.println("2.  Top 5");
-    System.out.println("3.  gem svømmedsicplin");
-    System.out.println("4.  registrer disciplin");
+    System.out.println("3.  Gem svømmedsicplin");
+    System.out.println("4.  Registrer disciplin");
+    System.out.println(Color.RED+"5.  Gem ny Konkurrence Deltager SKAL IKKE BRUGRES"+Color.RESET);
+    System.out.println("6.  Se konkurrence deltager");
     System.out.println("0.  Exit");
 
     Scanner input = new Scanner(System.in);
@@ -329,8 +331,8 @@ public class Ui {
       try {
         System.out.print("Vælg venligst: ");
         choice = input.nextInt();
-        while (choice < 0 || choice > 4) {
-          System.out.println(Color.RED+"Kun tal fra 0-4 er tilladt"+Color.RESET);
+        while (choice < 0 || choice > 6) {
+          System.out.println(Color.RED+"Kun tal fra 0-6 er tilladt"+Color.RESET);
           choice = input.nextInt();
         }
         loop = false;
@@ -345,16 +347,25 @@ public class Ui {
       case 2 -> top5();
       case 3 -> saveSvømmeDisciplin();
       case 4 -> registerDisciplin();
+      case 5 -> stævneDeltagere();
+      case 6 -> seStævneDeltagere();
       case 0 -> menu();
     }
   }
+  public void seStævneDeltagere() throws FileNotFoundException{
+    medlemmerBase.seStævneDeltagere();
+  }
+public void stævneDeltagere() throws FileNotFoundException {
+    medlemmerBase.saveStævneDeltagere();
 
+}
   public void seHoldOversigt() throws InterruptedException, FileNotFoundException {
     //TODO: Lav senior- og juniorkonkurrence svømmer
     System.out.println("======================================");
     System.out.println("Velkommen til konkurrence Svømmer portalen");
     System.out.println("1. Se Junior holdet");
     System.out.println("2. Se Senior Holder");
+    System.out.println("3. Se begge hold");
     System.out.println("0. Returner til træner programmet");
     System.out.println();
 
@@ -365,8 +376,8 @@ public class Ui {
       try {
         System.out.print("Vælg venligst: ");
         choice = input.nextInt();
-        while (choice < 0 || choice > 2) {
-          System.out.println(Color.RED+"Kun tal fra 0-2 er tilladt"+Color.RESET);
+        while (choice < 0 || choice > 3) {
+          System.out.println(Color.RED+"Kun tal fra 0-3 er tilladt"+Color.RESET);
           choice = input.nextInt();
         }
         loop = false;
@@ -378,6 +389,7 @@ public class Ui {
     switch (choice) {
       case 1 -> seHoldJunior();
       case 2 -> seHoldSenior();
+      case 3 -> medlemmerBase.se2Hold();
       case 0 -> træner();
     }
   }
@@ -479,6 +491,7 @@ public class Ui {
     }
   }
   public void top5() {
+    System.out.println();
     System.out.println("====================================");
     System.out.println("se top 5 indenfor disciplin: ");
     System.out.println("1. Brystsvømning");
@@ -487,7 +500,6 @@ public class Ui {
     System.out.println("4. RygCrawl");
     System.out.println("0. ingen disciplin");
 
-    //TODO: Hvis man skriver String istedet for en int skal programmet ikke crashe
     Scanner input = new Scanner(System.in);
     int choice = 0;
     boolean loop = true;
@@ -504,12 +516,50 @@ public class Ui {
         System.out.println(Color.RED + "Skriv venligst et tal og ikke et andet symbol" + Color.RESET);
         input.nextLine();
       }
+      System.out.println("\n\n");
     }
     switch (choice) {
-      case 1 -> medlemmerBase.sorterBrystSvømning();
-      case 2 -> medlemmerBase.sorterButterFly();
-      case 3 -> medlemmerBase.sorterCrawl();
-      case 4 -> medlemmerBase.sorterRygCrawl();
+      case 1 -> sorterBrystSvømning();
+      case 2 -> sorterButterFly();
+      case 3 -> sorterCrawl();
+      case 4 -> sorterRygCrawl();
     }
   }
+  public void sorterBrystSvømning(){
+    System.out.println(Color.BLUE_BOLD+"SENIORHOLDET"+Color.RESET);
+    medlemmerBase.sorterBrystSvømningSenior();
+
+    System.out.println();
+
+    System.out.println(Color.BLUE_BOLD+"JUNIORHOLDET"+Color.RESET);
+    medlemmerBase.sorterBrystSvømningJunior();
+  }
+  public void sorterCrawl(){
+    System.out.println(Color.BLUE_BOLD+"SENIORHOLDET"+Color.RESET);
+    medlemmerBase.sorterCrawlSenior();
+
+    System.out.println();
+
+    System.out.println(Color.BLUE_BOLD+"JUNIORHOLDET"+Color.RESET);
+    medlemmerBase.sorterCrawlJunior();
+  }
+  public void sorterButterFly(){
+    System.out.println(Color.BLUE_BOLD+"SENIORHOLDET"+Color.RESET);
+    medlemmerBase.sorterButterFlySenior();
+
+    System.out.println();
+
+    System.out.println(Color.BLUE_BOLD+"JUNIORHOLDET"+Color.RESET);
+    medlemmerBase.sorterButterFlyJunior();
+  }
+  public void sorterRygCrawl(){
+    System.out.println(Color.BLUE_BOLD+"SENIORHOLDET"+Color.RESET);
+    medlemmerBase.sorterRygCrawlSenior();
+
+    System.out.println();
+
+    System.out.println(Color.BLUE_BOLD+"JUNIORHOLDET"+Color.RESET);
+    medlemmerBase.sorterRygCrawlJunior();
+  }
+
 }

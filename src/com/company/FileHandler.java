@@ -3,9 +3,11 @@ package com.company;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
+import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Locale;
 import java.util.Scanner;
 
@@ -32,10 +34,11 @@ public class FileHandler {
       out.print("\n");
     }
   }
-public void saveKonkurrenceSvømmereToFile(ArrayList<Medlem> medlemmere) throws FileNotFoundException{
+
+  public void saveKonkurrenceSvømmereToFile(ArrayList<Medlem> medlemmere) throws FileNotFoundException {
     PrintStream out = new PrintStream(("KonkurrenceSvømmere.csv"));
 
-    for (Medlem medlem : medlemmere){
+    for (Medlem medlem : medlemmere) {
       if (medlem.getSvømmeType() == SvømmeType.KONKURRENCESVØMMER) {
         out.print(medlem.getMedlemsNummer());
         out.print(";");
@@ -47,7 +50,26 @@ public void saveKonkurrenceSvømmereToFile(ArrayList<Medlem> medlemmere) throws 
         out.print("\n");
       }
     }
+  }
+
+  public void saveStævnedeltagereToFile(ArrayList<Medlem> medlemmere) throws FileNotFoundException {
+    PrintStream out = new PrintStream(("StævneDeltagere.csv"));
+
+    for (Medlem medlem : medlemmere) {
+      if (medlem.getSvømmeType() == SvømmeType.KONKURRENCESVØMMER) {
+        out.print(medlem.getMedlemsNummer());
+        out.print(";");
+        out.print(medlem.getStævneNavn());
+        out.print(";");
+        out.print(medlem.getStævneLokation());
+        out.print(";");
+        out.print(medlem.getStævneDato());
+        out.print(";");
+        out.print(medlem.getStævneTid());
+        out.print("\n");
+      }
     }
+  }
 
   public ArrayList<Medlem> loadMedlemmereFraFil() throws FileNotFoundException {
 
@@ -59,13 +81,22 @@ public void saveKonkurrenceSvømmereToFile(ArrayList<Medlem> medlemmere) throws 
 
       Medlem medlem = readMedlemmere(line);
 
-      //TODO: modtag samme medlem, med parameterne svømmeNummer, svømmeDisciplin, svømmeTid og svømmeDato
-ArrayList<Medlem> konkurrenceSvømmere = loadKonkurrenceMedlemmereFraFil();
-      for (Medlem konkurrenceMedlem: konkurrenceSvømmere) {
-        if (konkurrenceMedlem.getMedlemsNummer() == medlem.getMedlemsNummer()){
+      ArrayList<Medlem> konkurrenceSvømmere = loadKonkurrenceMedlemmereFraFil();
+      for (Medlem konkurrenceMedlem : konkurrenceSvømmere) {
+        if (konkurrenceMedlem.getMedlemsNummer() == medlem.getMedlemsNummer()) {
           medlem.setSvømmedisciplin(konkurrenceMedlem.getSvømmedisciplin());
           medlem.setSvømmeTid(konkurrenceMedlem.getSvømmeTid());
           medlem.setSvømmeDato(konkurrenceMedlem.getSvømmeDato());
+        }
+      }
+
+      ArrayList<Medlem> stævneDeltagere = loadStævneDeltagereFraFil();
+      for (Medlem stævneDeltager : stævneDeltagere) {
+        if (stævneDeltager.getMedlemsNummer() == medlem.getMedlemsNummer()) {
+          medlem.setStævneNavn(stævneDeltager.getStævneNavn());
+          medlem.setStævneLokation(stævneDeltager.getStævneLokation());
+          medlem.setStævneDato(stævneDeltager.getStævneDato());
+          medlem.setStæveTid(stævneDeltager.getStævneTid());
         }
       }
 
@@ -74,8 +105,7 @@ ArrayList<Medlem> konkurrenceSvømmere = loadKonkurrenceMedlemmereFraFil();
     return medlemmere;
   }
 
-
-  public Medlem readMedlemmere(String line){
+  public Medlem readMedlemmere(String line) {
     Scanner input = new Scanner(line).useDelimiter(";").useLocale(Locale.ENGLISH);
 
     int medlemsnummer = input.nextInt();
@@ -108,8 +138,22 @@ ArrayList<Medlem> konkurrenceSvømmere = loadKonkurrenceMedlemmereFraFil();
     return medlemmere;
   }
 
+  public ArrayList<Medlem> loadStævneDeltagereFraFil() throws FileNotFoundException {
 
-  public Medlem readKonkurrenceSvømmere(String line){
+    ArrayList<Medlem> medlemmere = new ArrayList<>();
+
+    Scanner fileScanner = new Scanner(new File("StævneDeltagere.csv"));
+    while (fileScanner.hasNextLine()) {
+      String line = fileScanner.nextLine();
+
+      Medlem medlem = readStævneDeltagere(line);
+
+      medlemmere.add(medlem);
+    }
+    return medlemmere;
+  }
+
+  public Medlem readKonkurrenceSvømmere(String line) {
 
     Scanner input = new Scanner(line).useDelimiter(";").useLocale(Locale.ENGLISH);
 
@@ -118,9 +162,26 @@ ArrayList<Medlem> konkurrenceSvømmere = loadKonkurrenceMedlemmereFraFil();
     LocalTime svømmeTid = LocalTime.parse(input.next());
     LocalDate svømmeDato = LocalDate.parse(input.next());
 
-    Medlem medlem = new Medlem(medlemsnummer,svømmeDisciplin,svømmeTid,svømmeDato);
+    Medlem medlem = new Medlem(medlemsnummer, svømmeDisciplin, svømmeTid, svømmeDato);
     medlem.setMedlemsNummer(medlemsnummer);
 
     return medlem;
   }
+
+  public Medlem readStævneDeltagere(String line) {
+
+    Scanner input = new Scanner(line).useDelimiter(";").useLocale(Locale.ENGLISH);
+
+    int medlemsnummer = input.nextInt();
+    String stævneNavn = input.next();
+    String stævneLokation = input.next();
+    LocalDate svømmeDato = LocalDate.parse(input.next());
+    LocalTime svømmeTid = LocalTime.parse(input.next());
+
+    Medlem medlem = new Medlem(medlemsnummer, stævneNavn, svømmeDato, svømmeTid);
+    medlem.setStævneLokation(stævneLokation);
+
+    return medlem;
+  }
 }
+

@@ -3,7 +3,6 @@ package com.company;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-//TODO: lave konkurrence svømmer til en arveklasse, da den skal have flere attributter som svømmedisciplin
 public class Medlem {
  protected static int nummer = 1000;
  protected int medlemsNummer;
@@ -17,6 +16,10 @@ public class Medlem {
   protected Svømmedisciplin svømmedisciplin;
   protected LocalTime svømmeTid;
   protected LocalDate svømmeDato;
+  protected String stævneNavn;
+  protected String stævneLokation;
+  protected LocalDate stævneDato;
+  protected LocalTime stæveTid;
 
 
   public Medlem(String navn, int alder, String eMail, int telefonNr, MedlemskabsStatus medlemskabsStatus, boolean isInRestance, SvømmeType svømmeType) {
@@ -35,6 +38,9 @@ public class Medlem {
     this.svømmedisciplin = svømmedisciplin;
     this.svømmeTid = svømmeTid;
     this.svømmeDato = svømmeDato;
+  }
+
+  public Medlem(int medlemsnummer, String stævneNavn, LocalDate stævneDato, LocalTime stæveTid) {
   }
 
   public static int getNummer() {
@@ -156,6 +162,38 @@ public class Medlem {
     this.medlemsNummer = medlemsNummer;
   }
 
+  public String getStævneNavn() {
+    return stævneNavn;
+  }
+
+  public void setStævneNavn(String stævneNavn) {
+    this.stævneNavn = stævneNavn;
+  }
+
+  public String getStævneLokation() {
+    return stævneLokation;
+  }
+
+  public void setStævneLokation(String stævneLokation) {
+    this.stævneLokation = stævneLokation;
+  }
+
+  public LocalDate getStævneDato() {
+    return stævneDato;
+  }
+
+  public void setStævneDato(LocalDate stævneDato) {
+    this.stævneDato = stævneDato;
+  }
+
+  public LocalTime getStævneTid() {
+    return stæveTid;
+  }
+
+  public void setStæveTid(LocalTime stæveTid) {
+    this.stæveTid = stæveTid;
+  }
+
   @Override
   public String toString() {
     return "Nr. " + medlemsNummer + " " +
@@ -163,8 +201,6 @@ public class Medlem {
         + " " + alder + " år "+" "
         + "Email: " + eMail+" "
         + "tlf nr: " + telefonNr +" "+
-        "Restance: " + isInRestance +" "+
-        "MedlemskabsStatus " + medlemskabsStatus+" " +
         "Svømme type: " + svømmeType+"\n";
   }
 

@@ -41,20 +41,38 @@ public class MedlemmerBase {
 
   public void hentKontingentOversigt() throws FileNotFoundException {
     loadDatabase();
+    System.out.println();
+    System.out.println("PASSIVE MEDLEMSKAB");
     for (int i = 0; i < medlemmere.size(); i++) {
       if (!medlemmere.get(i).medlemskabsStatus.equals(MedlemskabsStatus.AKTIV)) {
-        System.out.println(Color.PURPLE_BOLD + medlemmere.get(i).getNavn() + Color.RESET + " Betaler: " + Color.YELLOW_BOLD+"500 kr."+Color.RESET);
-      } else if (medlemmere.get(i).getAlder() < 18) {
-        System.out.println(Color.PURPLE_BOLD + medlemmere.get(i).getNavn() + Color.RESET + " Betaler: " + Color.YELLOW_BOLD+"1000 kr."+Color.RESET);
-
-      } else if (18 < medlemmere.get(i).getAlder() && medlemmere.get(i).getAlder() < 60) {
-        System.out.println(Color.PURPLE_BOLD + medlemmere.get(i).getNavn() + Color.RESET + " Betaler: " + Color.YELLOW_BOLD+"1600 kr."+Color.RESET);
-
-      } else if (60 < medlemmere.get(i).getAlder()) {
-        System.out.println(Color.PURPLE_BOLD + medlemmere.get(i).getNavn() + Color.RESET + " Betaler: " + Color.YELLOW_BOLD+"1200 kr."+Color.RESET);
+        System.out.println(Color.PURPLE_BOLD + medlemmere.get(i).getNavn() + Color.RESET + " Betaler: " + Color.YELLOW_BOLD + "500 kr." + Color.RESET);
       }
     }
-  }
+    System.out.println();
+    System.out.println("JUNIOR MEDLEMSKAB");
+      for (int i = 0; i < medlemmere.size(); i++) {
+        if (medlemmere.get(i).getAlder() < 18) {
+          System.out.println(Color.PURPLE_BOLD + medlemmere.get(i).getNavn() + Color.RESET + " Betaler: " + Color.YELLOW_BOLD + "1000 kr." + Color.RESET);
+
+        }
+      }
+    System.out.println();
+    System.out.println("SENIOR MEDLEMSKAB");
+    for (int i = 0; i < medlemmere.size(); i++) {
+       if (18 < medlemmere.get(i).getAlder() && medlemmere.get(i).getAlder() < 60) {
+        System.out.println(Color.PURPLE_BOLD + medlemmere.get(i).getNavn() + Color.RESET + " Betaler: " + Color.YELLOW_BOLD + "1600 kr." + Color.RESET);
+
+      }
+    }
+    System.out.println();
+    System.out.println("60+ ÅR MEDLEMBSKAB");
+    for (int i = 0; i < medlemmere.size(); i++) {
+      if (60 < medlemmere.get(i).getAlder()) {
+        System.out.println(Color.PURPLE_BOLD + medlemmere.get(i).getNavn() + Color.RESET + " Betaler: " + Color.YELLOW_BOLD + "1200 kr." + Color.RESET);
+      }
+    }
+    }
+
 
   public int hentSamletBetaling() throws FileNotFoundException {
     loadDatabase();
@@ -121,15 +139,16 @@ public class MedlemmerBase {
   public void se2Hold() {
     for (int i = 0; i < medlemmere.size(); i++) {
       Medlem medlem = medlemmere.get(i);
-      if (medlem.getAlder()<18){
-        System.out.println(medlem.getNavn()+" Er i Juniorholdet");
-      } else if (medlem.getAlder()>= 18){
-        System.out.println(medlem.getNavn()+" Er i Seniorholdet");
+      if (medlem.getAlder() < 18) {
+        System.out.println(medlem.getNavn() + " Er i Juniorholdet");
+      } else if (medlem.getAlder() >= 18) {
+        System.out.println(medlem.getNavn() + " Er i Seniorholdet");
       }
     }
-    }
+  }
+
   public void seJuniorHold() {
-    System.out.println(Color.PURPLE_BOLD+"Junior holdet:"+Color.RESET);
+    System.out.println(Color.PURPLE_BOLD + "Junior holdet:" + Color.RESET);
     for (int i = 0; i < medlemmere.size(); i++) {
       Medlem medlem = medlemmere.get(i);
       if (medlem.getAlder() < 18 && medlem.getSvømmeType() == SvømmeType.KONKURRENCESVØMMER) {
@@ -138,147 +157,216 @@ public class MedlemmerBase {
       }
     }
   }
+
   public void seSeniorHold() {
-    System.out.println(Color.PURPLE_BOLD+"Senior Holdet" + Color.RESET);
+    System.out.println(Color.PURPLE_BOLD + "Senior Holdet" + Color.RESET);
     for (int i = 0; i < medlemmere.size(); i++) {
       Medlem medlem = medlemmere.get(i);
       if (medlem.getAlder() >= 18 && medlem.getSvømmeType() == SvømmeType.KONKURRENCESVØMMER) {
-        System.out.println(medlem.getNavn() + " "+ medlem.getSvømmedisciplin()+" " + medlem.getSvømmeTid() + " " + medlem.getSvømmeDato());
+        System.out.println(medlem.getNavn() + " " + medlem.getSvømmedisciplin() + " " + medlem.getSvømmeTid() + " " + medlem.getSvømmeDato());
 
       }
     }
   }
-  private Medlem findMedlemByName(String navn) {
+
+  public Medlem findMedlemByName(String navn) {
     for (Medlem medlem : medlemmere) {
       if (medlem.getFornavn().equalsIgnoreCase(navn)) {
         return medlem;
-      } else if (medlem.getNavn().equalsIgnoreCase(navn)){
+      } else if (medlem.getNavn().equalsIgnoreCase(navn)) {
         return medlem;
       }
     }
     return null;
   }
-  public Medlem findMedlemByMedlemsNummer(int medlemsNummer){
-    for (Medlem medlem : medlemmere){
-      if (medlem.getMedlemsNummer() == medlemsNummer){
+
+  public Medlem findMedlemByMedlemsNummer(int medlemsNummer) {
+    for (Medlem medlem : medlemmere) {
+      if (medlem.getMedlemsNummer() == medlemsNummer) {
         return medlem;
       }
     }
     return null;
   }
+
   public void loadKonkurrenceSvømmerDisciplin() throws FileNotFoundException {
     FileHandler fileHandler = new FileHandler();
     medlemmere = fileHandler.loadKonkurrenceMedlemmereFraFil();
 
   }
 
-  public void lavKonkurrenceSvømmerDisciplin() throws FileNotFoundException{
+  public void lavKonkurrenceSvømmerDisciplin() throws FileNotFoundException {
     FileHandler fileHandler = new FileHandler();
     fileHandler.saveKonkurrenceSvømmereToFile(medlemmere);
   }
-  public void
-  setDisciplin(String navn, Svømmedisciplin svømmedisciplin, LocalTime svømmeTid, LocalDate svømmeDato) {
+  public void saveStævneDeltagere() throws FileNotFoundException {
+    FileHandler fileHandler = new FileHandler();
+    fileHandler.saveStævnedeltagereToFile(medlemmere);
+  }
+  public void seStævneDeltagere() throws FileNotFoundException{
+
+    for (int i = 0; i < medlemmere.size(); i++) {
+      if (medlemmere.get(i).getStævneNavn()!=null){
+        System.out.println(medlemmere.get(i).getNavn());
+        System.out.println(medlemmere.get(i).getMedlemsNummer());
+        System.out.println(medlemmere.get(i).getStævneNavn());
+        System.out.println(medlemmere.get(i).getStævneLokation());
+        System.out.println(medlemmere.get(i).getStævneDato());
+        System.out.println(medlemmere.get(i).getStævneTid());
+
+      }
+    }
+  }
+  public void setDisciplin(String navn, Svømmedisciplin svømmedisciplin, LocalTime svømmeTid, LocalDate svømmeDato) {
     // find animal with this name
     Medlem medlem = findMedlemByName(navn);
-      medlem.setSvømmedisciplin(svømmedisciplin);
-      medlem.setSvømmeTid(svømmeTid);
-      medlem.setSvømmeDato(svømmeDato);
+    medlem.setSvømmedisciplin(svømmedisciplin);
+    medlem.setSvømmeTid(svømmeTid);
+    medlem.setSvømmeDato(svømmeDato);
 
-    }
-
-public boolean checkOmMedlemEksistere(String navn) {
-  Medlem medlem = findMedlemByName(navn);
-  if (medlem == null) {
-    return false;
-  } else {
-    return true;
   }
-}
 
-  public void sorterBrystSvømning() {
+  public boolean checkOmMedlemEksistere(String navn) {
+    Medlem medlem = findMedlemByName(navn);
+    if (medlem == null) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  public void sorterBrystSvømningJunior() {
 
     ArrayList<LocalTime> brystSvømning = new ArrayList<>();
     for (int i = 0; i < medlemmere.size(); i++) {
       if (medlemmere.get(i).getSvømmeType() != SvømmeType.KONKURRENCESVØMMER) {
 
-      } else if (medlemmere.get(i).getSvømmeType() == SvømmeType.KONKURRENCESVØMMER && medlemmere.get(i).getSvømmedisciplin() == Svømmedisciplin.BRYSTSVØMNING) {
+      } else if (medlemmere.get(i).getSvømmeType() == SvømmeType.KONKURRENCESVØMMER && medlemmere.get(i).getSvømmedisciplin() == Svømmedisciplin.BRYSTSVØMNING && medlemmere.get(i).getAlder() < 18) {
         brystSvømning.add(medlemmere.get(i).getSvømmeTid());
       }
     }
     Collections.sort(brystSvømning);
 
-    System.out.println(Color.WHITE_BOLD_BRIGHT + "Top 5 indenfor BRYSTSVØMNING"+Color.RESET);
-    for (int i = 0; i < brystSvømning.size(); i++) {
-      for (int j = 0; j < medlemmere.size(); j++) {
-        if (brystSvømning.get(i) == medlemmere.get(j).getSvømmeTid()) {
-          System.out.println(Color.WHITE_BOLD_BRIGHT + (i + 1) + ". Plads " + Color.RESET + "Medlem " + Color.WHITE_BRIGHT + medlemmere.get(j).medlemsNummer + Color.RESET + " " + medlemmere.get(j).getNavn() + " " + Color.GREEN_BOLD + brystSvømning.get(i) + Color.RESET);
-        }
-      }
-    }
+    System.out.println(Color.WHITE_BOLD_BRIGHT + "Top 5 indenfor BRYSTSVØMNING JUNIOR" + Color.RESET);
+    sorterTop5(brystSvømning);
   }
-  public void sorterButterFly() {
+  public void sorterBrystSvømningSenior() {
 
     ArrayList<LocalTime> brystSvømning = new ArrayList<>();
     for (int i = 0; i < medlemmere.size(); i++) {
       if (medlemmere.get(i).getSvømmeType() != SvømmeType.KONKURRENCESVØMMER) {
 
-      } else if (medlemmere.get(i).getSvømmeType() == SvømmeType.KONKURRENCESVØMMER && medlemmere.get(i).getSvømmedisciplin() == Svømmedisciplin.BUTTERFLY) {
+      } else if (medlemmere.get(i).getSvømmeType() == SvømmeType.KONKURRENCESVØMMER && medlemmere.get(i).getSvømmedisciplin() == Svømmedisciplin.BRYSTSVØMNING && medlemmere.get(i).getAlder() >= 18) {
         brystSvømning.add(medlemmere.get(i).getSvømmeTid());
       }
     }
     Collections.sort(brystSvømning);
 
-    System.out.println(Color.WHITE_BOLD_BRIGHT + "Top 5 indenfor BUTTERFLY"+Color.RESET);
+    System.out.println(Color.WHITE_BOLD_BRIGHT + "Top 5 indenfor BRYSTSVØMNING" + Color.RESET);
+    sorterTop5(brystSvømning);
+  }
+
+  public void sorterButterFlyJunior() {
+
+    ArrayList<LocalTime> brystSvømning = new ArrayList<>();
+    for (int i = 0; i < medlemmere.size(); i++) {
+      if (medlemmere.get(i).getSvømmeType() != SvømmeType.KONKURRENCESVØMMER) {
+
+      } else if (medlemmere.get(i).getSvømmeType() == SvømmeType.KONKURRENCESVØMMER && medlemmere.get(i).getSvømmedisciplin() == Svømmedisciplin.BUTTERFLY && medlemmere.get(i).getAlder()<18) {
+        brystSvømning.add(medlemmere.get(i).getSvømmeTid());
+      }
+    }
+    Collections.sort(brystSvømning);
+
+    System.out.println(Color.WHITE_BOLD_BRIGHT + "Top 5 indenfor BUTTERFLY" + Color.RESET);
+    sorterTop5(brystSvømning);
+  }
+  public void sorterButterFlySenior() {
+
+    ArrayList<LocalTime> brystSvømning = new ArrayList<>();
+    for (int i = 0; i < medlemmere.size(); i++) {
+      if (medlemmere.get(i).getSvømmeType() != SvømmeType.KONKURRENCESVØMMER) {
+
+      } else if (medlemmere.get(i).getSvømmeType() == SvømmeType.KONKURRENCESVØMMER && medlemmere.get(i).getSvømmedisciplin() == Svømmedisciplin.BUTTERFLY && medlemmere.get(i).getAlder()>=18) {
+        brystSvømning.add(medlemmere.get(i).getSvømmeTid());
+      }
+    }
+    Collections.sort(brystSvømning);
+
+    System.out.println(Color.WHITE_BOLD_BRIGHT + "Top 5 indenfor BUTTERFLY" + Color.RESET);
+    sorterTop5(brystSvømning);
+  }
+  public void sorterCrawlJunior() {
+
+    ArrayList<LocalTime> brystSvømning = new ArrayList<>();
+    for (int i = 0; i < medlemmere.size(); i++) {
+      if (medlemmere.get(i).getSvømmeType() != SvømmeType.KONKURRENCESVØMMER) {
+
+      } else if (medlemmere.get(i).getSvømmeType() == SvømmeType.KONKURRENCESVØMMER && medlemmere.get(i).getSvømmedisciplin() == Svømmedisciplin.CRAWL && medlemmere.get(i).getAlder()<18) {
+        brystSvømning.add(medlemmere.get(i).getSvømmeTid());
+      }
+    }
+    Collections.sort(brystSvømning);
+
+    System.out.println(Color.WHITE_BOLD_BRIGHT + "Top 5 indenfor CRAWL" + Color.RESET);
+    sorterTop5(brystSvømning);
+  }
+  public void sorterCrawlSenior() {
+
+    ArrayList<LocalTime> brystSvømning = new ArrayList<>();
+    for (int i = 0; i < medlemmere.size(); i++) {
+      if (medlemmere.get(i).getSvømmeType() != SvømmeType.KONKURRENCESVØMMER) {
+
+      } else if (medlemmere.get(i).getSvømmeType() == SvømmeType.KONKURRENCESVØMMER && medlemmere.get(i).getSvømmedisciplin() == Svømmedisciplin.CRAWL && medlemmere.get(i).getAlder() >= 18) {
+        brystSvømning.add(medlemmere.get(i).getSvømmeTid());
+      }
+    }
+    Collections.sort(brystSvømning);
+
+    System.out.println(Color.WHITE_BOLD_BRIGHT + "Top 5 indenfor CRAWL" + Color.RESET);
+    sorterTop5(brystSvømning);
+  }
+
+  public void sorterRygCrawlSenior() {
+
+    ArrayList<LocalTime> brystSvømning = new ArrayList<>();
+    for (int i = 0; i < medlemmere.size(); i++) {
+      if (medlemmere.get(i).getSvømmeType() != SvømmeType.KONKURRENCESVØMMER) {
+
+      } else if (medlemmere.get(i).getSvømmeType() == SvømmeType.KONKURRENCESVØMMER && medlemmere.get(i).getSvømmedisciplin() == Svømmedisciplin.RYGCRAWL && medlemmere.get(i).getAlder() >= 18) {
+        brystSvømning.add(medlemmere.get(i).getSvømmeTid());
+      }
+    }
+    Collections.sort(brystSvømning);
+
+    System.out.println(Color.WHITE_BOLD_BRIGHT + "Top 5 indenfor RYGCRAWL" + Color.RESET);
+    sorterTop5(brystSvømning);
+  }
+  public void sorterRygCrawlJunior() {
+
+    ArrayList<LocalTime> brystSvømning = new ArrayList<>();
+    for (int i = 0; i < medlemmere.size(); i++) {
+      if (medlemmere.get(i).getSvømmeType() != SvømmeType.KONKURRENCESVØMMER) {
+
+      } else if (medlemmere.get(i).getSvømmeType() == SvømmeType.KONKURRENCESVØMMER && medlemmere.get(i).getSvømmedisciplin() == Svømmedisciplin.RYGCRAWL && medlemmere.get(i).getAlder() < 18) {
+        brystSvømning.add(medlemmere.get(i).getSvømmeTid());
+      }
+    }
+    Collections.sort(brystSvømning);
+
+    System.out.println(Color.WHITE_BOLD_BRIGHT + "Top 5 indenfor RYGCRAWL" + Color.RESET);
+    sorterTop5(brystSvømning);
+  }
+
+  public void sorterTop5(ArrayList<LocalTime> brystSvømning) {
     for (int i = 0; i < brystSvømning.size(); i++) {
       for (int j = 0; j < medlemmere.size(); j++) {
-        if (brystSvømning.get(i) == medlemmere.get(j).getSvømmeTid()) {
+        if (brystSvømning.get(i) == medlemmere.get(j).getSvømmeTid() && (i + 1) <= 5) {
           System.out.println(Color.WHITE_BOLD_BRIGHT + (i + 1) + ". Plads " + Color.RESET + "Medlem " + Color.WHITE_BRIGHT + medlemmere.get(j).medlemsNummer + Color.RESET + " " + medlemmere.get(j).getNavn() + " " + Color.GREEN_BOLD + brystSvømning.get(i) + Color.RESET);
         }
       }
     }
   }
-  public void sorterCrawl(){
-
-    ArrayList<LocalTime> brystSvømning = new ArrayList<>();
-    for (int i = 0; i < medlemmere.size(); i++) {
-      if (medlemmere.get(i).getSvømmeType() != SvømmeType.KONKURRENCESVØMMER){
-
-      } else if (medlemmere.get(i).getSvømmeType() == SvømmeType.KONKURRENCESVØMMER && medlemmere.get(i).getSvømmedisciplin() == Svømmedisciplin.CRAWL){
-        brystSvømning.add(medlemmere.get(i).getSvømmeTid());
-      }
-    }
-    Collections.sort(brystSvømning);
-
-    System.out.println(Color.WHITE_BOLD_BRIGHT+"Top 5 indenfor CRAWL"+Color.RESET);
-    for (int i = 0; i < brystSvømning.size(); i++) {
-      for (int j = 0; j < medlemmere.size(); j++) {
-        if (brystSvømning.get(i) == medlemmere.get(j).getSvømmeTid()) {
-          System.out.println(Color.WHITE_BOLD_BRIGHT + (i + 1) + ". Plads " + Color.RESET + "Medlem " + Color.WHITE_BRIGHT + medlemmere.get(j).medlemsNummer + Color.RESET + " " + medlemmere.get(j).getNavn() + " " + Color.GREEN_BOLD + brystSvømning.get(i) + Color.RESET);
-        }
-      }
-    }
-  }
-  public void sorterRygCrawl(){
-
-    ArrayList<LocalTime> brystSvømning = new ArrayList<>();
-    for (int i = 0; i < medlemmere.size(); i++) {
-      if (medlemmere.get(i).getSvømmeType() != SvømmeType.KONKURRENCESVØMMER){
-
-      } else if (medlemmere.get(i).getSvømmeType() == SvømmeType.KONKURRENCESVØMMER && medlemmere.get(i).getSvømmedisciplin() == Svømmedisciplin.RYGCRAWL){
-        brystSvømning.add(medlemmere.get(i).getSvømmeTid());
-      }
-    }
-    Collections.sort(brystSvømning);
-
-    System.out.println(Color.WHITE_BOLD_BRIGHT+"Top 5 indenfor RYGCRAWL"+Color.RESET);
-    for (int i = 0; i < brystSvømning.size(); i++) {
-      for (int j = 0; j < medlemmere.size(); j++) {
-        if (brystSvømning.get(i) == medlemmere.get(j).getSvømmeTid()) {
-          System.out.println(Color.WHITE_BOLD_BRIGHT + (i + 1) + ". Plads " + Color.RESET + "Medlem " + Color.WHITE_BRIGHT + medlemmere.get(j).medlemsNummer + Color.RESET + " " + medlemmere.get(j).getNavn() + " " + Color.GREEN_BOLD + brystSvømning.get(i) + Color.RESET);
-        }
-      }
-    }
-    }
 
   @Override
   public String toString() {
