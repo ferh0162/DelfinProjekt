@@ -22,6 +22,7 @@ public class Ui {
       switch (mainMenu()) {
         case 0 -> {
           System.out.println(Color.RED + "HAR DU HUSKET AT GEMME DINE NYE REGISTRERINGER?" + Color.RESET);
+          Thread.sleep(2000);
           exit();
         }
         case 1 -> list();
@@ -102,33 +103,33 @@ public class Ui {
 list();
     Scanner input = new Scanner(System.in);
 
-    System.out.println("Indtast navnet på den person, som skal redigeres");
-    String navn = input.nextLine();
-    if (!medlemmerBase.checkOmMedlemEksistere(navn)) {
+    System.out.println("Indtast medlemsnummer, på den person som skal redigeres");
+    int medlemsNummer = input.nextInt();
+    if (!medlemmerBase.checkOmMedlemEksistereInt(medlemsNummer)) {
       System.out.println(Color.RED + "Medlem findes ikke" + Color.RESET);
       Thread.sleep(2000);
 
 redigerMedlem();
     } else {
+      System.out.println(Color.GREEN_BOLD+"Medlem identificeret"+Color.RESET);
+      Medlem medlem = medlemmerBase.findMedlemByMedlemsNummer(medlemsNummer);
 
-      System.out.print("Fulde Navn: ");
-      String findnanvn = input.nextLine();
-      Medlem medlem = medlemmerBase.findMedlemByName(findnanvn);
 
-      System.out.print("alder: ");
+      System.out.print("Indtast nye alder: ");
       int alder = input.nextInt();
 
-      System.out.print("Email: ");
+      System.out.print("Indtast nye Email: ");
       String eMail = input.next();
       input.nextLine();
 
-      System.out.print("Telefon nr.: ");
+      System.out.print("Indtast nye Telefon nr.: ");
       int telefonNr = input.nextInt();
       input.nextLine();
 
-      System.out.println("Hvilken svømmeType er du?");
+      System.out.println("Indtast nye Svømmetype");
       System.out.println("1.  Motionist");
       System.out.println("2.  Konkurrence Svømmer");
+
       int choice = input.nextInt();
       SvømmeType svømmeType = SvømmeType.MOTIONIST;
       while (choice < 1 || choice > 2) {
@@ -207,11 +208,12 @@ redigerMedlem();
     }
   }
 
-  public void save() throws FileNotFoundException {
+  public void save() throws FileNotFoundException, InterruptedException {
     System.out.println(Color.GREEN + "Saving the database ...");
     medlemmerBase.saveDatabase();
     System.out.println("Saving database completed succesfully");
     System.out.println("You can now exit the application" + Color.RESET);
+    Thread.sleep(2000);
   }
 
   public void load() throws FileNotFoundException {
@@ -369,7 +371,7 @@ redigerMedlem();
     System.out.println("2.  Top 5");
     System.out.println("3.  Gem svømmedsicplin");
     System.out.println("4.  Registrer disciplin");
-    System.out.println(Color.RED+"5.  Gem ny Konkurrence Deltager SKAL IKKE BRUGRES"+Color.RESET);
+    System.out.println("5.  Gem ny Stævne"+Color.RED+ " bruges ikke til noget, da registrering sker manuelt i filen"+Color.RESET);
     System.out.println("6.  Se konkurrence deltager");
     System.out.println("0.  Exit");
 
@@ -398,7 +400,11 @@ redigerMedlem();
       case 4 -> registerDisciplin();
       case 5 -> stævneDeltagere();
       case 6 -> seStævneDeltagere();
-      case 0 -> menu();
+      case 0 -> {
+        System.out.println(Color.RED + "HAR DU HUSKET AT GEMME DINE NYE REGISTRERINGER?" + Color.RESET);
+        Thread.sleep(2000);
+        menu();
+      }
     }
   }
   public void seStævneDeltagere() throws FileNotFoundException{
@@ -460,17 +466,30 @@ public void stævneDeltagere() throws FileNotFoundException {
     Scanner input = new Scanner(System.in);
 
     for (Medlem medlem : medlemmerBase.getAllMedlemmere()) {
-      System.out.println(Color.YELLOW + medlem.getNavn() + " " +Color.YELLOW_BRIGHT+ medlem.getSvømmedisciplin()+ Color.RESET);
+      if (medlem.getSvømmeType() == SvømmeType.KONKURRENCESVØMMER) {
+        System.out.println(Color.YELLOW + "Nr. " + medlem.medlemsNummer + " " + medlem.getNavn() + " " + Color.YELLOW_BRIGHT + medlem.getSvømmedisciplin() + Color.RESET);
+      }
     }
     System.out.println("Der er " + medlemmerBase.getMedlemCount() + " medlemmere i klubben.");
 
-    System.out.println("Indtast navnet på den person, som skal regsistrere disciplin");
-    String navn = input.nextLine();
-    if (!medlemmerBase.checkOmMedlemEksistere(navn)) {
+    System.out.println("Indtast medlemsnummeret på den person, som skal registrere disciplin");
+    int medlemsNummer = 0;
+    boolean loop = true;
+while (loop) {
+  try {
+    medlemsNummer = input.nextInt();
+    loop = false;
+  } catch (InputMismatchException e) {
+    System.out.println(Color.RED + "Skal være et tal!" + Color.RESET);
+    input.nextLine();
+  }
+}
+
+    if (!medlemmerBase.checkOmMedlemEksistereInt(medlemsNummer)) {
       System.out.println(Color.RED+"Medlem findes ikke"+Color.RESET);
       træner();
-    } else if (medlemmerBase.checkOmMedlemEksistere(navn)) {
-      System.out.println(Color.GREEN_BOLD+"Medlemmet "+ navn+" er fundet"+Color.RESET);
+    } else if (medlemmerBase.checkOmMedlemEksistereInt(medlemsNummer)) {
+      System.out.println(Color.GREEN_BOLD+"Medlemmet med medlemsmummere: "+ medlemsNummer+" er fundet"+Color.RESET);
 
       System.out.println("Vælg disciplin: ");
       System.out.println("1. Brystsvømning");
@@ -483,8 +502,8 @@ public void stævneDeltagere() throws FileNotFoundException {
 
       //TODO: Hvis man skriver String istedet for en int skal programmet ikke crashe
       int choice = 0;
-      boolean loop = true;
-      while (loop) {
+      boolean loop1 = true;
+      while (loop1) {
         try {
           System.out.print("Vælg venligst: ");
           choice = input.nextInt();
@@ -492,7 +511,7 @@ public void stævneDeltagere() throws FileNotFoundException {
             System.out.println(Color.RED+"Kun tal fra 1-4 er tilladt"+Color.RESET);
             choice = input.nextInt();
           }
-          loop = false;
+          loop1 = false;
         } catch (InputMismatchException e) {
           System.out.println(Color.RED + "Skriv venligst et tal og ikke et andet symbol" + Color.RESET);
           input.nextLine();
@@ -536,7 +555,7 @@ public void stævneDeltagere() throws FileNotFoundException {
         }
       }
 
-      medlemmerBase.setDisciplin(navn, svømmedisciplin, svømmeTid, svømmeDato);
+      medlemmerBase.setDisciplin(medlemsNummer, svømmedisciplin, svømmeTid, svømmeDato);
     }
   }
   public void top5() {

@@ -56,7 +56,7 @@ public class FileHandler {
     PrintStream out = new PrintStream(("StævneDeltagere.csv"));
 
     for (Medlem medlem : medlemmere) {
-      if (medlem.getSvømmeType() == SvømmeType.KONKURRENCESVØMMER) {
+      if (medlem.getSvømmeType() == SvømmeType.KONKURRENCESVØMMER && medlem.getStævneNavn() != null) {
         out.print(medlem.getMedlemsNummer());
         out.print(";");
         out.print(medlem.getStævneNavn());

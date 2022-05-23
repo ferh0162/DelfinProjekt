@@ -40,7 +40,11 @@ public class Medlem {
     this.svømmeDato = svømmeDato;
   }
 
-  public Medlem(int medlemsnummer, String stævneNavn, LocalDate stævneDato, LocalTime stæveTid) {
+  public Medlem(int medlemsnummer, String stævneNavn, LocalDate stævneDato, LocalTime stævneTid) {
+    this.medlemsNummer = medlemsnummer;
+    this.stævneNavn = stævneNavn;
+    this.stævneDato = stævneDato;
+    this.stæveTid = stævneTid;
   }
 
   public static int getNummer() {

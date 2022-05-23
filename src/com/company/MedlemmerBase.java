@@ -216,19 +216,26 @@ public class MedlemmerBase {
 
     for (int i = 0; i < medlemmere.size(); i++) {
       if (medlemmere.get(i).getStævneNavn()!=null){
-        System.out.println(medlemmere.get(i).getNavn());
-        System.out.println(medlemmere.get(i).getMedlemsNummer());
-        System.out.println(medlemmere.get(i).getStævneNavn());
-        System.out.println(medlemmere.get(i).getStævneLokation());
-        System.out.println(medlemmere.get(i).getStævneDato());
-        System.out.println(medlemmere.get(i).getStævneTid());
-
+        System.out.println();
+        System.out.print("Nr. "+medlemmere.get(i).getMedlemsNummer());
+        System.out.print(" ");
+        System.out.print(medlemmere.get(i).getNavn());
+        System.out.print(" ");
+        System.out.print("Stævnenavn: "+medlemmere.get(i).getStævneNavn());
+        System.out.print(" ");
+        System.out.print("Placering: "+medlemmere.get(i).getStævneLokation());
+        System.out.print(" ");
+        System.out.print("Dato: "+ medlemmere.get(i).getStævneDato());
+        System.out.print(" ");
+        System.out.print("Tidspunkt: "+medlemmere.get(i).getStævneTid());
+        System.out.println();
+        System.out.println();
       }
     }
   }
-  public void setDisciplin(String navn, Svømmedisciplin svømmedisciplin, LocalTime svømmeTid, LocalDate svømmeDato) {
+  public void setDisciplin(int medlemsNummer, Svømmedisciplin svømmedisciplin, LocalTime svømmeTid, LocalDate svømmeDato) {
     // find animal with this name
-    Medlem medlem = findMedlemByName(navn);
+    Medlem medlem = findMedlemByMedlemsNummer(medlemsNummer);
     medlem.setSvømmedisciplin(svømmedisciplin);
     medlem.setSvømmeTid(svømmeTid);
     medlem.setSvømmeDato(svømmeDato);
@@ -243,7 +250,14 @@ public class MedlemmerBase {
       return true;
     }
   }
-
+  public boolean checkOmMedlemEksistereInt(int medlemsNummer) {
+    Medlem medlem = findMedlemByMedlemsNummer(medlemsNummer);
+    if (medlem == null) {
+      return false;
+    } else {
+      return true;
+    }
+  }
   public void sorterBrystSvømningJunior() {
 
     ArrayList<LocalTime> brystSvømning = new ArrayList<>();
