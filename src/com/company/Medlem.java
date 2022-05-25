@@ -4,22 +4,22 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 public class Medlem {
- protected static int nummer = 1000;
- protected int medlemsNummer;
-  protected String navn;
-  protected int alder;
-  protected String eMail;
-  protected int telefonNr;
-  protected boolean isInRestance;
-  protected MedlemskabsStatus medlemskabsStatus;
-  protected SvømmeType svømmeType;
-  protected Svømmedisciplin svømmedisciplin;
-  protected LocalTime svømmeTid;
-  protected LocalDate svømmeDato;
-  protected String stævneNavn;
-  protected String stævneLokation;
-  protected LocalDate stævneDato;
-  protected LocalTime stæveTid;
+  private static int nummer = 1000;
+  protected int medlemsNummer;
+  private String navn;
+  private int alder;
+  private String eMail;
+  private int telefonNr;
+  private boolean isInRestance;
+  private MedlemskabsStatus medlemskabsStatus;
+  private SvømmeType svømmeType;
+  private Svømmedisciplin svømmedisciplin;
+  private LocalTime svømmeTid;
+  private LocalDate svømmeDato;
+  private String stævneNavn;
+  private String stævneLokation;
+  private LocalDate stævneDato;
+  private LocalTime stæveTid;
 
 
   public Medlem(String navn, int alder, String eMail, int telefonNr, MedlemskabsStatus medlemskabsStatus, boolean isInRestance, SvømmeType svømmeType) {
@@ -33,8 +33,8 @@ public class Medlem {
     this.medlemsNummer = nummer++;
   }
 
-  public Medlem(int medlemsNummer, Svømmedisciplin svømmedisciplin, LocalTime svømmeTid, LocalDate svømmeDato){
-    this.medlemsNummer=medlemsNummer;
+  public Medlem(int medlemsNummer, Svømmedisciplin svømmedisciplin, LocalTime svømmeTid, LocalDate svømmeDato) {
+    this.medlemsNummer = medlemsNummer;
     this.svømmedisciplin = svømmedisciplin;
     this.svømmeTid = svømmeTid;
     this.svømmeDato = svømmeDato;
@@ -141,7 +141,6 @@ public class Medlem {
   }
 
 
-
   public MedlemskabsStatus getMedlemskabsStatus() {
     return medlemskabsStatus;
   }
@@ -201,11 +200,11 @@ public class Medlem {
   @Override
   public String toString() {
     return "Nr. " + medlemsNummer + " " +
-        "Navn: "+navn +" "
-        + " " + alder + " år "+" "
-        + "Email: " + eMail+" "
-        + "tlf nr: " + telefonNr +" "+
-        "Svømme type: " + svømmeType+"\n";
+        "Navn: " + navn + " "
+        + " " + alder + " år " + " "
+        + "Email: " + eMail + " "
+        + "tlf nr: " + telefonNr + " " +
+        "Svømme type: " + svømmeType + "\n";
   }
 
 }

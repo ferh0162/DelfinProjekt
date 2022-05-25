@@ -53,7 +53,7 @@ public class MedlemmerBase {
     System.out.println();
     System.out.println(Color.WHITE_BOLD_BRIGHT+"PASSIVE MEDLEMSKAB" + Color.RESET);
     for (int i = 0; i < medlemmere.size(); i++) {
-      if (!medlemmere.get(i).medlemskabsStatus.equals(MedlemskabsStatus.AKTIV)) {
+      if (!medlemmere.get(i).getMedlemskabsStatus().equals(MedlemskabsStatus.AKTIV)) {
         System.out.println(Color.PURPLE_BOLD + medlemmere.get(i).getNavn() + Color.RESET + " Betaler: " + Color.YELLOW_BOLD + "500 kr." + Color.RESET);
       }
     }
@@ -91,7 +91,7 @@ public class MedlemmerBase {
 
       if (medlemI.isInRestance() == true) {
         System.out.println(Color.PURPLE_BOLD + medlemI.getFornavn() + Color.RESET + "Mangler betaling");
-      } else if (!medlemI.medlemskabsStatus.equals(MedlemskabsStatus.AKTIV)) {
+      } else if (!medlemI.getMedlemskabsStatus().equals(MedlemskabsStatus.AKTIV)) {
         System.out.println(Color.PURPLE_BOLD + medlemI.getFornavn() + Color.RESET + " Betaler: " + "500 kr.");
         samletBetaling += 500;
       } else if (medlemI.getAlder() < 18) {
